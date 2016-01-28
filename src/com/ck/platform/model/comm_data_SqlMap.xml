@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="comm_data">
+
+	<sql id="sql_where" >
+		<isNotEmpty property="dataType" prepend="and">
+               <![CDATA[ 
+                      data_type =#dataType#
+                ]]>
+		</isNotEmpty>
+		
+   </sql>
+  
+  <select id="selectByKey" resultClass="java.util.HashMap" >
+    select id, data_type,data_value,data_name,remark,is_valid
+		from comm_data
+		where id = #id#
+  </select>
+ 
+  <select id="selectByParam" resultClass="java.util.HashMap" >
+   select id, data_type,data_value,data_name,remark,is_valid
+		from comm_data
+    where 1=1
+    <include refid="sql_where" /> limit 0,1;
+  </select>
+  
+  <delete id="deleteByKey" parameterClass="java.util.HashMap">
+    delete from comm_data where
+    <isNotEmpty property="id">
+          id = #id# 
+ 	</isNotEmpty>
+ 	<isNotEmpty property="dataType">
+          data_type=#dataType#
+ 	</isNotEmpty>
+  </delete>
+
+  <insert id="insert" parameterClass="java.util.HashMap">
+	    INSERT INTO comm_data (id,
+	    <dynamic prepend=" ">  
+	        <isNotEmpty property="dataType" prepend=",">data_type
+			</isNotEmpty>
+			<isNotEmpty property="dataValue" prepend=",">data_value
+			</isNotEmpty>
+			<isNotEmpty property="dataName" prepend=",">data_name
+			</isNotEmpty>
+			<isNotEmpty property="remark" prepend=",">remark
+			</isNotEmpty>
+			<isNotEmpty property="isValid" prepend=",">is_valid
+			</isNotEmpty>
+	    </dynamic>  
+	    <![CDATA[ 
+	        ) VALUES ( 
+	    ]]>  
+	    #id#,  
+	     <dynamic prepend=" ">  
+	        <isNotEmpty property="dataType" prepend=",">#dataType#
+			</isNotEmpty>
+			<isNotEmpty property="dataValue" prepend=",">#dataValue#
+			</isNotEmpty>
+			<isNotEmpty property="dataName" prepend=",">#dataName#
+			</isNotEmpty>
+			<isNotEmpty property="remark" prepend=",">#remark#
+			</isNotEmpty>
+			<isNotEmpty property="isValid" prepend=",">#isValid#
+			</isNotEmpty>
+	    </dynamic>  
+	    <![CDATA[ 
+	        ) 
+	    ]]>  
+    <selectKey  resultClass="long" keyProperty="id">
+        SELECT LAST_INSERT_ID() as id  from comm_data  Limit 1;
+	</selectKey>
+  </insert>
+  
+  <update id="updateByKey" parameterClass="java.util.HashMap">
+   	update comm_data
+  		<dynamic prepend="set" >
+		     <isNotEmpty prepend="," property="dataType">
+				data_type =#dataType#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="dataValue">
+				data_value =#dataValue#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="dataName">
+				data_name =#dataName#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="remark">
+				remark =#remark#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="isValid">
+				is_valid =#isValid#
+			</isNotEmpty>
+		 </dynamic>
+		 where 
+		 <isNotEmpty  property="id" >
+		       id = #id#
+		 </isNotEmpty>
+  </update>
+  
+  <select id="getList" resultClass="java.util.HashMap" parameterClass="java.util.HashMap" >
+	 select id, data_type,data_value,data_name,remark,is_valid
+    from comm_data
+	    WHERE 1=1
+	    <include refid="sql_where" />
+		limit #firstResult#, #maxResult# 
+  </select>
+  
+  <select id="getCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+	select  count(1) from comm_data
+	where 1=1 
+    <include refid="sql_where" />
+  </select>
+</sqlMap>

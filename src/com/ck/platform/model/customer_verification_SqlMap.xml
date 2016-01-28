@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="customer_verification">
+
+	<sql id="sql_where" >
+ 		<isNotEmpty property="subDateNum">
+	               <![CDATA[ 
+	                    and  send_time>date_sub(curdate(),interval #subDateNum# day)
+	                ]]>
+	 	</isNotEmpty>
+  	
+  	 <isNotEmpty property="account">
+               <![CDATA[ 
+                      and account =#account#
+                ]]>
+ 	</isNotEmpty>
+    <isNotEmpty property="customerId">
+               <![CDATA[ 
+                      and customer_id =#customerId#
+                ]]>
+ 	</isNotEmpty>
+ 	<isNotEmpty property="typeId">
+               <![CDATA[ 
+                      and type_id =#typeId#
+                ]]>
+ 	</isNotEmpty>
+ 	<isNotEmpty property="siteId">
+               <![CDATA[ 
+                      and site_id =#siteId#
+                ]]>
+ 	</isNotEmpty>
+ 	<isNotEmpty property="isValid">
+               <![CDATA[ 
+                      and is_valid =#isValid#
+                ]]>
+ 	</isNotEmpty>
+   </sql>
+  
+  <select id="selectByKey" resultClass="java.util.HashMap" >
+    select id, customer_id, type_id, ifnull(account,'') as account, ifnull(verificate_url,'') as verificate_url, 
+        ifnull(send_time,'') as send_time,
+      ifnull(confirm_time,'') as confirm_time, site_id, ifnull(valid_code,'') as valid_code, is_valid, ifnull(send_content,'') as send_content 
+    from customer_verification
+    where id = #id# or customer_id=#id#
+  </select>
+ 
+  <select id="selectByParam" resultClass="java.util.HashMap" >
+    select id, customer_id, type_id, ifnull(account,'') as account, ifnull(verificate_url,'') as verificate_url, 
+        ifnull(send_time,'') as send_time,
+      ifnull(confirm_time,'') as confirm_time, site_id, ifnull(valid_code,'') as valid_code, is_valid, ifnull(send_content,'') as send_content 
+    from customer_verification
+    where 1=1
+    <include refid="sql_where" /> limit 0,1;
+  </select>
+  
+  <delete id="deleteByKey" parameterClass="java.util.HashMap">
+    delete from customer_verification where
+    <isNotEmpty property="id">
+                      id = #id#
+ 	</isNotEmpty>
+ 	<isNotEmpty property="ids">
+                      id in ($ids$)
+ 	</isNotEmpty>
+  </delete>
+
+  <insert id="insert" parameterClass="java.util.HashMap">
+	    INSERT INTO customer_verification (id,
+	    <dynamic prepend=" ">  
+	             <isNotEmpty property="customerId" prepend=",">customer_id</isNotEmpty>  
+                <isNotEmpty property="typeId" prepend=",">type_id</isNotEmpty> 
+                <isNotEmpty property="account" prepend=",">account</isNotEmpty> 
+                <isNotEmpty property="verificateUrl" prepend=",">verificate_url</isNotEmpty> 
+                <isNotEmpty property="sendTime" prepend=",">send_time</isNotEmpty> 
+                <isNotEmpty property="confirmTime" prepend=",">confirm_time</isNotEmpty> 
+                <isNotEmpty property="siteId" prepend=",">site_id</isNotEmpty> 
+                <isNotEmpty property="validCode" prepend=",">valid_code</isNotEmpty> 
+                <isNotEmpty property="isValid" prepend=",">is_valid</isNotEmpty>
+	    </dynamic>  
+	    <![CDATA[ 
+	        ) VALUES ( 
+	    ]]>  
+	    #id#,  
+	     <dynamic prepend=" ">  
+	            <isNotEmpty property="customerId" prepend=",">#customerId#</isNotEmpty>  
+                <isNotEmpty property="typeId" prepend=",">#typeId#</isNotEmpty>  
+                <isNotEmpty property="account" prepend=",">#account#</isNotEmpty>  
+                <isNotEmpty property="verificateUrl" prepend=",">#verificateUrl#</isNotEmpty>  
+                <isNotEmpty property="sendTime" prepend=",">#sendTime#</isNotEmpty>  
+                <isNotEmpty property="confirmTime" prepend=",">#confirmTime#</isNotEmpty>  
+                <isNotEmpty property="siteId" prepend=",">#siteId#</isNotEmpty>  
+                <isNotEmpty property="validCode" prepend=",">#validCode#</isNotEmpty>  
+                <isNotEmpty property="isValid" prepend=",">#isValid#</isNotEmpty> 
+	    </dynamic>  
+	    <![CDATA[ 
+	        ) 
+	    ]]>  
+    <selectKey  resultClass="long" keyProperty="id">
+        SELECT LAST_INSERT_ID() as id  from customer_verification  Limit 1;
+	</selectKey>
+  </insert>
+  
+  <update id="updateByKey" parameterClass="java.util.HashMap">
+   	update customer_verification
+  		<dynamic prepend="set" >
+		     <isNotEmpty prepend="," property="customerId" >
+	        	customer_id = #customerId:BIGINT#
+		      </isNotEmpty>
+		      <isNotEmpty prepend="," property="typeId" >
+		        type_id = #typeId:INTEGER#
+		      </isNotEmpty>
+		      <isNotEmpty prepend="," property="account" >
+		        account = #account:VARCHAR#
+		      </isNotEmpty>
+		      <isNotEmpty prepend="," property="verificateUrl" >
+		        verificate_url = #verificateUrl:VARCHAR#
+		      </isNotEmpty>
+		      <isNotEmpty prepend="," property="sendTime" >
+		        send_time = now()
+		      </isNotEmpty>
+		      <isNotEmpty prepend="," property="confirmTime" >
+		        confirm_time = now()
+		      </isNotEmpty>
+		      <isNotEmpty prepend="," property="siteId" >
+		        site_id = #siteId:INTEGER#
+		      </isNotEmpty>
+		      <isNotEmpty prepend="," property="validCode" >
+		        valid_code = #validCode:VARCHAR#
+		      </isNotEmpty>
+		      <isNotEmpty prepend="," property="isValid" >
+		        is_valid = #isValid:INTEGER#
+		      </isNotEmpty>
+		      <isNotEmpty prepend="," property="sendContent" >
+		        send_content = #sendContent:LONGVARCHAR#
+		      </isNotEmpty>
+		     
+		 </dynamic>
+		 where 
+		 <isNotEmpty  property="id" >
+		       id = #id:INTEGER#
+		 </isNotEmpty>
+		 <isNotEmpty  property="customerId" >
+		       customer_id = #customerId:INTEGER#
+		 </isNotEmpty>
+  </update>
+  
+  <select id="getList" resultClass="java.util.HashMap" parameterClass="java.util.HashMap" >
+	  select id, customer_id, type_id, ifnull(account,'') as account, ifnull(verificate_url,'') as verificate_url, 
+        ifnull(send_time,'') as send_time,
+      ifnull(confirm_time,'') as confirm_time, site_id, ifnull(valid_code,'') as valid_code, is_valid, ifnull(send_content,'') as send_content 
+    from customer_verification
+	    WHERE 1=1
+	    <include refid="sql_where" />
+		limit #firstResult#, #maxResult# 
+  </select>
+  
+  <select id="getCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+	select  count(1) from customer_verification
+	where 1=1 
+    <include refid="sql_where" />
+  </select>
+</sqlMap>

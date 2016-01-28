@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="order_product">
+
+	<sql id="sql_where" >
+ 		<isNotEmpty property="orderId">
+               <![CDATA[ 
+                      and order_id = #orderId#
+                ]]>
+ 		</isNotEmpty>
+ 		<isNotEmpty property="isValid">
+               <![CDATA[ 
+                      and is_valid = #isValid#
+                ]]>
+ 		</isNotEmpty>
+   </sql>
+  
+  <select id="selectByKey" resultClass="java.util.HashMap" >
+    select id,order_id,product_id,product_name,product_price,product_num,pay_money,total_money
+    from order_product
+    where id = #id#
+  </select>
+ 
+  <select id="selectByParam" resultClass="java.util.HashMap" >
+    select id,order_id,product_id,product_name,product_price,product_num,pay_money,total_money
+    from order_product
+    where 1=1
+    <include refid="sql_where" /> limit 0,1;
+  </select>
+  <!-- 
+  <delete id="deleteByKey" parameterClass="java.util.HashMap">
+    delete from order_product where
+    <isNotEmpty property="id">
+          id = #id# or order_id=#id#
+ 	</isNotEmpty>
+  </delete>
+ -->
+  <insert id="insert" parameterClass="java.util.HashMap">
+	    INSERT INTO order_product (id,
+	    <dynamic prepend=" ">  
+	                <isNotEmpty property="orderId" prepend=",">order_id</isNotEmpty>  
+	                <isNotEmpty property="productId" prepend=",">product_id</isNotEmpty> 
+	                <isNotEmpty property="productName" prepend=",">product_name</isNotEmpty>
+	                <isNotEmpty property="productPrice" prepend=",">product_price</isNotEmpty>
+	                <isNotEmpty property="productNum" prepend=",">product_num</isNotEmpty>
+	                <isNotEmpty property="payMoney" prepend=",">pay_money</isNotEmpty>
+	                <isNotEmpty property="totalMoney" prepend=",">total_money</isNotEmpty>
+	    </dynamic>  
+	    <![CDATA[ 
+	        ) VALUES ( 
+	    ]]>  
+	    #id#,  
+	     <dynamic prepend=" ">  
+	                <isNotEmpty property="orderId" prepend=",">#orderId#</isNotEmpty>  
+	                 <isNotEmpty property="productId" prepend=",">#productId#</isNotEmpty> 
+	                <isNotEmpty property="productName" prepend=",">#productName#</isNotEmpty>
+	                <isNotEmpty property="productPrice" prepend=",">#productPrice#</isNotEmpty>
+	                <isNotEmpty property="productNum" prepend=",">#productNum#</isNotEmpty>
+	                <isNotEmpty property="payMoney" prepend=",">#payMoney#</isNotEmpty>
+	                <isNotEmpty property="totalMoney" prepend=",">#totalMoney#</isNotEmpty>
+	    </dynamic>  
+	    <![CDATA[ 
+	        ) 
+	    ]]>  
+    <selectKey  resultClass="long" keyProperty="id">
+        SELECT LAST_INSERT_ID() as id  from order_product  Limit 1;
+	</selectKey>
+  </insert>
+   
+  <update id="updateByKey" parameterClass="java.util.HashMap">
+   	update order_product
+  		<dynamic prepend="set" >
+		     <isNotEmpty prepend="," property="productId" >
+		       product_id = #productId#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="productName" >
+		       product_name = #productName#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="productPrice" >
+		       product_price = #productPrice#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="productNum" >
+		       product_num = #productNum#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="payMoney" >
+		       pay_money = #payMoney#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="totalMoney" >
+		       total_money = #totalMoney#
+		     </isNotEmpty>
+		 </dynamic>
+		 where 
+		 <isNotEmpty  property="id" >
+		       id = #id#
+		 </isNotEmpty>
+		 <isNotEmpty  property="orderId" >
+		       order_id = #orderId#
+		 </isNotEmpty>
+  </update>
+  
+  <select id="getList" resultClass="java.util.HashMap" parameterClass="java.util.HashMap" >
+	 select id,order_id,product_id,product_name,product_price,product_num,pay_money,total_money
+    from order_product  
+	    WHERE 1=1
+	    <include refid="sql_where" />
+		limit #firstResult#, #maxResult# 
+  </select>
+  
+  <select id="getCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+	select  count(1) from order_product
+	where 1=1 
+    <include refid="sql_where" />
+  </select>
+</sqlMap>

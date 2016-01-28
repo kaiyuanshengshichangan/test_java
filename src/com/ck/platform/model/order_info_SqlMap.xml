@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="order_info">
+
+	<sql id="sql_where" >
+		<isNotEmpty property="customerId">
+               <![CDATA[ 
+                      and customer_id = #customerId#
+                ]]>
+ 		</isNotEmpty>
+ 		<isNotEmpty property="orderId">
+               <![CDATA[ 
+                      and order_id = #orderId#
+                ]]>
+ 		</isNotEmpty>
+ 		<isNotEmpty property="orderStatus">
+               <![CDATA[ 
+                      and order_status = #orderStatus#
+                ]]>
+ 		</isNotEmpty>
+ 		<isNotEmpty property="isValid">
+               <![CDATA[ 
+                      and is_valid = #isValid#
+                ]]>
+ 		</isNotEmpty>
+   </sql>
+  
+  <select id="selectByKey" resultClass="java.util.HashMap" >
+    select id,order_id,customer_id,order_name,pay_money,total_money,freight,coupon_money,coupon_id
+    ,pay_mode,receive_name,receive_mobile,zip_code,seller_name,seller_mobile
+    ,province_id,province,city_id,city,district_id,district
+    ,receive_address,order_status,remark,customer_remark,site_id,order_type,create_time,is_invoice
+    ,valid_time,default_product_id,is_valid
+    from order_info
+    where id = #id# or order_id=#id#
+  </select>
+ 
+  <select id="selectByParam" resultClass="java.util.HashMap" >
+    select id,order_id,customer_id,order_name,pay_money,total_money,freight,coupon_money,coupon_id
+    ,pay_mode,receive_name,receive_mobile,zip_code,seller_name,seller_mobile
+    ,province_id,province,city_id,city,district_id,district
+    ,receive_address,order_status,remark,customer_remark,site_id,order_type,create_time,is_invoice
+    ,valid_time,default_product_id,is_valid
+    from order_info
+    where 1=1
+    <include refid="sql_where" /> limit 0,1;
+  </select>
+  <!-- 
+  <delete id="deleteByKey" parameterClass="java.util.HashMap">
+    delete from order_info where
+    <isNotEmpty property="id">
+          id = #id# or order_id=#id#
+ 	</isNotEmpty>
+  </delete>
+ -->
+
+  <insert id="insert" parameterClass="java.util.HashMap">
+	    INSERT INTO order_info (id,
+	    <dynamic prepend=" ">  
+	                <isNotEmpty property="orderId" prepend=",">order_id</isNotEmpty>  
+	                <isNotEmpty property="customerId" prepend=",">customer_id</isNotEmpty> 
+	                <isNotEmpty property="orderName" prepend=",">order_name</isNotEmpty>
+	                <isNotEmpty property="payMoney" prepend=",">pay_money</isNotEmpty>
+	                <isNotEmpty property="totalMoney" prepend=",">total_money</isNotEmpty>
+	                <isNotEmpty property="freight" prepend=",">freight</isNotEmpty>
+	                <isNotEmpty property="couponMoney" prepend=",">coupon_money</isNotEmpty>
+	                <isNotEmpty property="couponId" prepend=",">coupon_id</isNotEmpty>
+	                <isNotEmpty property="payMode" prepend=",">pay_mode</isNotEmpty>
+	                <isNotEmpty property="receiveName" prepend=",">receive_name</isNotEmpty>
+	                <isNotEmpty property="receiveMobile" prepend=",">receive_mobile</isNotEmpty> 
+	                <isNotEmpty property="zipCode" prepend=",">zip_code</isNotEmpty>  
+	                <isNotEmpty property="provinceId" prepend=",">province_id</isNotEmpty>
+	                <isNotEmpty property="province" prepend=",">province</isNotEmpty> 
+	                <isNotEmpty property="cityId" prepend=",">city_id</isNotEmpty> 
+	                <isNotEmpty property="city" prepend=",">city</isNotEmpty> 
+	                <isNotEmpty property="districtId" prepend=",">district_id</isNotEmpty> 
+	                <isNotEmpty property="district" prepend=",">district</isNotEmpty> 
+	                <isNotEmpty property="receiveAddress" prepend=",">receive_address</isNotEmpty> 
+	                <isNotEmpty property="orderStatus" prepend=",">order_status</isNotEmpty> 
+	                <isNotEmpty property="remark" prepend=",">remark</isNotEmpty> 
+	                <isNotEmpty property="customerRemark" prepend=",">customer_remark</isNotEmpty> 
+	                <isNotEmpty property="sellerMame" prepend=",">seller_name</isNotEmpty> 
+	                <isNotEmpty property="sellerMobile" prepend=",">seller_mobile</isNotEmpty> 
+	                <isNotEmpty property="siteId" prepend=",">site_id</isNotEmpty> 
+	                <isNotEmpty property="orderType" prepend=",">order_type</isNotEmpty>
+	                 <isNotEmpty property="isInvoice" prepend=",">is_invoice</isNotEmpty>
+	                 <isNotEmpty property="validTime" prepend=",">valid_time</isNotEmpty>
+	                 <isNotEmpty property="defaultProductId" prepend=",">default_product_id</isNotEmpty>
+	                <isNotEmpty property="isValid" prepend=",">is_valid</isNotEmpty>
+	    </dynamic>  
+	    <![CDATA[ 
+	        ) VALUES ( 
+	    ]]>  
+	    #id#,  
+	     <dynamic prepend=" ">  
+	                <isNotEmpty property="orderId" prepend=",">#orderId#</isNotEmpty>  
+	                 <isNotEmpty property="customerId" prepend=",">#customerId#</isNotEmpty> 
+	                <isNotEmpty property="orderName" prepend=",">#orderName#</isNotEmpty>
+	                <isNotEmpty property="payMoney" prepend=",">#payMoney#</isNotEmpty>
+	                <isNotEmpty property="totalMoney" prepend=",">#totalMoney#</isNotEmpty>
+	                <isNotEmpty property="freight" prepend=",">#freight#</isNotEmpty>
+	                <isNotEmpty property="couponMoney" prepend=",">#couponMoney#</isNotEmpty>
+	                 <isNotEmpty property="couponId" prepend=",">#couponId#</isNotEmpty>
+	                <isNotEmpty property="payMode" prepend=",">#payMode#</isNotEmpty>
+	                <isNotEmpty property="receiveName" prepend=",">#receiveName#</isNotEmpty>
+	                <isNotEmpty property="receiveMobile" prepend=",">#receiveMobile#</isNotEmpty> 
+	                <isNotEmpty property="zipCode" prepend=",">#zipCode#</isNotEmpty>  
+	                <isNotEmpty property="provinceId" prepend=",">#provinceId#</isNotEmpty>  
+	                <isNotEmpty property="province" prepend=",">#province#</isNotEmpty>  
+	                <isNotEmpty property="cityId" prepend=",">#cityId#</isNotEmpty>  
+	                <isNotEmpty property="city" prepend=",">#city#</isNotEmpty>  
+	                <isNotEmpty property="districtId" prepend=",">#districtId#</isNotEmpty>  
+	                <isNotEmpty property="district" prepend=",">#district#</isNotEmpty>  
+	                <isNotEmpty property="receiveAddress" prepend=",">#receiveAddress#</isNotEmpty>  
+	                <isNotEmpty property="orderStatus" prepend=",">#orderStatus#</isNotEmpty>  
+	                <isNotEmpty property="remark" prepend=",">#remark#</isNotEmpty>
+	                <isNotEmpty property="customerRemark" prepend=",">#customerRemark#</isNotEmpty>
+	                <isNotEmpty property="sellerMame" prepend=",">##sellerMobile##</isNotEmpty> 
+	                <isNotEmpty property="sellerMobile" prepend=",">#sellerMobile#</isNotEmpty> 
+	                <isNotEmpty property="siteId" prepend=",">#siteId#</isNotEmpty>
+	                <isNotEmpty property="orderType" prepend=",">#orderType#</isNotEmpty>
+	                <isNotEmpty property="isInvoice" prepend=",">#isInvoice#</isNotEmpty>
+	                <isNotEmpty property="validTime" prepend=",">#validTime#</isNotEmpty>
+	                <isNotEmpty property="defaultProductId" prepend=",">#defaultProductId#</isNotEmpty>
+	                <isNotEmpty property="isValid" prepend=",">#isValid#</isNotEmpty>  
+	    </dynamic>  
+	    <![CDATA[ 
+	        ) 
+	    ]]>  
+    <selectKey  resultClass="long" keyProperty="id">
+        SELECT LAST_INSERT_ID() as id  from order_info  Limit 1;
+	</selectKey>
+  </insert>
+   
+  <update id="updateByKey" parameterClass="java.util.HashMap">
+   	update order_info
+  		<dynamic prepend="set" >
+		     <isNotEmpty prepend="," property="orderName" >
+		       order_name = #orderName#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="payMode" >
+		       pay_mode = #payMode#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="receiveName" >
+		       receive_name = #receiveName#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="receiveMobile" >
+		       receive_mobile = #receiveMobile#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="zipCode" >
+		       zip_code = #zipCode#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="provinceId" >
+		       province_id = #provinceId#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="province" >
+		       province = #province#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="cityId" >
+		       city_id = #cityId#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="city" >
+		       city = #city#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="districtId" >
+		       district_id = #districtId#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="district" >
+		       district = #district#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="receiveAddress" >
+		       receive_address = #receiveAddress#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="orderStatus" >
+		       order_status = #orderStatus#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="remark" >
+		       remark = #remark#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="customerRemark" >
+		       customer_remark = #customerRemark#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="siteId" >
+		       site_id = #siteId#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="orderType" >
+		       order_type = #orderType#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="payMoney" >
+		       pay_money = #payMoney#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="totalMoney" >
+		       total_money = #totalMoney#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="couponMoney" >
+		       coupon_money = #couponMoney#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="freight" >
+		       freight = #freight#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="sellerName" >
+		       seller_name = #sellerName#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="sellerMobile" >
+		       seller_mobile = #sellerMobile#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="isInvoice" >
+		       is_invoice = #isInvoice#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="validTime" >
+		       valid_time = #validTime#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="defaultProductId" >
+		       default_product_id = #defaultProductId#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="isValid" >
+		       is_valid = #isValid#
+		     </isNotEmpty>
+		 </dynamic>
+		 where 
+		 <isNotEmpty  property="id" >
+		       id = #id#
+		 </isNotEmpty>
+		 <isNotEmpty  property="orderId" >
+		       order_id = #orderId#
+		 </isNotEmpty>
+  </update>
+  
+  <select id="getList" resultClass="java.util.HashMap" parameterClass="java.util.HashMap" >
+	 select id,order_id,customer_id,order_name,pay_money,total_money,freight,coupon_money,coupon_id
+    ,pay_mode,receive_name,receive_mobile,zip_code,seller_name,seller_mobile
+    ,province_id,province,city_id,city,district_id,district
+    ,receive_address,order_status,remark,customer_remark,site_id,order_type,create_time
+    ,valid_time,default_product_id,is_invoice,is_valid
+    from order_info   
+	    WHERE 1=1
+	    <include refid="sql_where" />
+		limit #firstResult#, #maxResult# 
+  </select>
+  
+  <select id="getCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+	select  count(1) from order_info
+	where 1=1 
+    <include refid="sql_where" />
+  </select>
+</sqlMap>

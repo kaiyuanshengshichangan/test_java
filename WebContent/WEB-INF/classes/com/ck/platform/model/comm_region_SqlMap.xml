@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="comm_region">
+
+	<sql id="sql_where" >
+ 		<isNotEmpty property="regionName" prepend="and">
+               <![CDATA[ 
+                      region_name like concat('%',#regionName#,'%')
+                ]]>
+		</isNotEmpty>
+	    
+		<isNotEmpty property="parentId" prepend="and">
+               <![CDATA[ 
+                      parent_id =#parentId#
+                ]]>
+		</isNotEmpty>
+		<isNotEmpty property="isValid" prepend="and">
+               <![CDATA[ 
+                      is_valid =#isValid#
+                ]]>
+		</isNotEmpty>
+		<isNotEmpty property="treeLevel" prepend="and">
+               <![CDATA[ 
+                      tree_level =#treeLevel#
+                ]]>
+		</isNotEmpty>
+		<isNotEmpty property="treeLevelList" prepend="and">
+               <![CDATA[ 
+                      tree_level in ($treeLevelList$)
+                ]]>
+		</isNotEmpty>
+		<isNotEmpty property="regionIdList" prepend="and">
+		<![CDATA[ 
+			  region_id in ($regionIdList$)
+		]]>
+		</isNotEmpty>
+   </sql>
+  
+  <select id="selectByKey" resultClass="java.util.HashMap" >
+    select id, region_id, parent_id, ifnull(region_name,'') as region_name,tree_level, is_valid
+		from comm_region
+		where id = #id# or region_id=#id# 
+  </select>
+ 
+  <select id="selectByParam" resultClass="java.util.HashMap" >
+   select id, region_id, parent_id, ifnull(region_name,'') as region_name,tree_level, is_valid
+		from comm_region
+    where 1=1
+    <include refid="sql_where" /> limit 0,1;
+  </select>
+  
+  <delete id="deleteByKey" parameterClass="java.util.HashMap">
+    delete from comm_region where
+    <isNotEmpty property="id">
+          id = #id# or region_id=#id#
+ 	</isNotEmpty>
+ 	<isNotEmpty property="ids">
+          id in ($ids$)
+ 	</isNotEmpty>
+  </delete>
+
+  <insert id="insert" parameterClass="java.util.HashMap">
+	    INSERT INTO comm_region (id,
+	    <dynamic prepend=" ">  
+	        <isNotEmpty property="regionId" prepend=",">region_id
+			</isNotEmpty>
+			<isNotEmpty property="parentId" prepend=",">parent_id
+			</isNotEmpty>
+			<isNotEmpty property="regionName" prepend=",">region_name
+			</isNotEmpty>
+			<isNotEmpty property="treeLevel" prepend=",">tree_level
+			</isNotEmpty>
+			<isNotEmpty property="isValid" prepend=",">is_valid
+			</isNotEmpty>
+	    </dynamic>  
+	    <![CDATA[ 
+	        ) VALUES ( 
+	    ]]>  
+	    #id#,  
+	     <dynamic prepend=" ">  
+	        <isNotEmpty property="regionId" prepend=",">#regionId#
+			</isNotEmpty>
+			<isNotEmpty property="parentId" prepend=",">#parentId#
+			</isNotEmpty>
+			<isNotEmpty property="regionName" prepend=",">#regionName#
+			</isNotEmpty>
+			<isNotEmpty property="treeLevel" prepend=",">#treeLevel#
+			</isNotEmpty>
+			<isNotEmpty property="isValid" prepend=",">#isValid#
+			</isNotEmpty>
+	    </dynamic>  
+	    <![CDATA[ 
+	        ) 
+	    ]]>  
+    <selectKey  resultClass="long" keyProperty="id">
+        SELECT LAST_INSERT_ID() as id  from comm_region  Limit 1;
+	</selectKey>
+  </insert>
+  
+  <update id="updateByKey" parameterClass="java.util.HashMap">
+   	update comm_region
+  		<dynamic prepend="set" >
+		     <isNotEmpty prepend="," property="regionId">
+				region_id =#regionId:BIGINT#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="parentId">
+				parent_id =#parentId:BIGINT#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="regionName">
+				region_name =#regionName:VARCHAR#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="treeLevel">
+				tree_level =#treeLevel:VARCHAR#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="isValid">
+				is_valid =#isValid:INTEGER#
+			</isNotEmpty>
+		 </dynamic>
+		 where 
+		 <isNotEmpty  property="id" >
+		       id = #id#
+		 </isNotEmpty>
+		 <isNotEmpty  property="regionId" >
+		       region_id = #regionId#
+		 </isNotEmpty>
+  </update>
+  
+  <select id="getList" resultClass="java.util.HashMap" parameterClass="java.util.HashMap" >
+	 select id, region_id, parent_id, region_name, tree_level, is_valid
+    from comm_region
+	    WHERE 1=1
+	    <include refid="sql_where" />
+		limit #firstResult#, #maxResult# 
+  </select>
+  
+  <select id="getCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+	select  count(1) from comm_region
+	where 1=1 
+    <include refid="sql_where" />
+  </select>
+</sqlMap>

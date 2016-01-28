@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="cms_column">
+
+	<sql id="sql_where" >
+		<isNotEmpty  property="channelId">
+		  	<isGreaterThan  property="channelId" compareValue="0"> 
+                        <![CDATA[ and channel_id = #channelId# ]]>
+            </isGreaterThan> 
+ 		</isNotEmpty>	
+ 		 <isNotEmpty  property="columnId">
+          	<isGreaterThan property="columnId" compareValue="0"> 
+                        <![CDATA[ and column_id = #columnId# ]]>
+            </isGreaterThan>	
+ 		</isNotEmpty> 		
+ 		<isNotEmpty  property="columnType">
+          	<isGreaterThan property="columnType" compareValue="0"> 
+                        <![CDATA[ and column_type = #columnType# ]]>
+            </isGreaterThan>	
+ 		</isNotEmpty> 	 
+		<isNotEmpty  property="columnName">
+                        <![CDATA[ and column_name like concat('%',#columnName#,'%') ]]>	
+ 		</isNotEmpty> 	  	
+ 		
+ 		<isNotEmpty  property="isValid">
+                        <![CDATA[ and is_valid =#isValid# ]]>	
+ 		</isNotEmpty> 		
+		
+   </sql>
+  
+  <select id="selectByKey" resultClass="java.util.HashMap" >
+    select id,channel_id,column_name,column_desc,column_type,column_url,banner_pic_type,tpl_path,sort_order,is_valid
+    from cms_column
+		where id = #id#
+  </select>
+ 
+  <select id="selectByParam" resultClass="java.util.HashMap" >
+    select id,channel_id,column_name,column_desc,column_type,column_url,banner_pic_type,tpl_path,sort_order,is_valid
+    from cms_column
+    where 1=1
+    <include refid="sql_where" /> limit 0,1;
+  </select>
+  
+  <delete id="deleteByKey" parameterClass="java.util.HashMap">
+    delete from cms_column where
+    <isNotEmpty property="id">
+          id = #id# 
+ 	</isNotEmpty>
+  </delete>
+
+  <insert id="insert" parameterClass="java.util.HashMap">
+	    INSERT INTO cms_column (id,
+	    <dynamic prepend=" ">  
+	        	<isNotEmpty property="channelId" prepend=",">channel_id</isNotEmpty>  
+                <isNotEmpty property="columnName" prepend=",">column_name</isNotEmpty>  
+                <isNotEmpty property="columnDesc" prepend=",">column_desc</isNotEmpty>  
+                <isNotEmpty property="columnType" prepend=",">column_type</isNotEmpty>  
+                <isNotEmpty property="columnUrl" prepend=",">column_url</isNotEmpty>  
+                <isNotEmpty property="bannerPicType" prepend=",">banner_pic_type</isNotEmpty>  
+                <isNotEmpty property="sortOrder" prepend=",">sort_order</isNotEmpty>  
+                <isNotEmpty property="isValid" prepend=",">is_valid</isNotEmpty>  
+                <isNotEmpty property="tplPath" prepend=",">tpl_path</isNotEmpty>
+	    </dynamic>  
+	    <![CDATA[ 
+	        ) VALUES ( 
+	    ]]>  
+	    #id#,  
+	     <dynamic prepend=" ">  
+	        	<isNotEmpty property="channelId" prepend=",">#channelId#</isNotEmpty>  
+                <isNotEmpty property="columnName" prepend=",">#columnName#</isNotEmpty>  
+                <isNotEmpty property="columnDesc" prepend=",">#columnDesc#</isNotEmpty>  
+                <isNotEmpty property="columnType" prepend=",">#columnType#</isNotEmpty>  
+                <isNotEmpty property="columnUrl" prepend=",">#columnUrl#</isNotEmpty>  
+                <isNotEmpty property="bannerPicType" prepend=",">#bannerPicType#</isNotEmpty>  
+                <isNotEmpty property="sortOrder" prepend=",">#sortOrder#</isNotEmpty>  
+                <isNotEmpty property="isValid" prepend=",">#isValid#</isNotEmpty>  
+                <isNotEmpty property="tplPath" prepend=",">#tplPath#</isNotEmpty>
+	    </dynamic>  
+	    <![CDATA[ 
+	        ) 
+	    ]]>  
+    <selectKey  resultClass="long" keyProperty="id">
+        SELECT LAST_INSERT_ID() as id  from cms_column  Limit 1;
+	</selectKey>
+  </insert>
+  
+  <update id="updateByKey" parameterClass="java.util.HashMap">
+   	update cms_column
+  		<dynamic prepend="set" >
+		     <isNotEmpty  prepend="," property="channelId">
+			  	<isGreaterThan  property="channelId" compareValue="0"> 
+	                  <![CDATA[  channel_id = #channelId# ]]>
+	            </isGreaterThan> 
+		 	  </isNotEmpty>	
+		      <isNotEmpty prepend="," property="columnName">
+		       	  column_name = #columnName:VARCHAR#
+		      </isNotEmpty>
+		      <isNotEmpty prepend="," property="columnType">
+				<isGreaterThan  property="columnType" compareValue="0">       
+		       		 column_type = #columnType:INTEGER#
+		        </isGreaterThan> 
+		      </isNotEmpty>
+		      <isNotEmpty prepend="," property="columnUrl">
+		        column_url = #columnUrl:VARCHAR#
+		      </isNotEmpty>
+		      <isNotEmpty prepend="," property="bannerPicType">
+		        banner_pic_type = #bannerPicType:VARCHAR#
+		      </isNotEmpty>
+		      <isNotEmpty prepend="," property="sortOrder">
+		        sort_order = #sortOrder:INTEGER#
+		      </isNotEmpty>
+		      <isNotEmpty prepend="," property="isValid" >
+		        is_valid = #isValid:INTEGER#
+		      </isNotEmpty>
+		      <isNotEmpty prepend="," property="columnDesc">
+		        column_desc = #columnDesc:VARCHAR#
+		      </isNotEmpty>
+		      <isNotEmpty prepend="," property="tplPath">
+		        tpl_path = #tplPath:VARCHAR#
+		      </isNotEmpty>
+		 </dynamic>
+		 where 
+		 <isNotEmpty  property="id" >
+		       id = #id#
+		 </isNotEmpty>
+  </update>
+  
+  <select id="getList" resultClass="java.util.HashMap" parameterClass="java.util.HashMap" >
+	 select id,channel_id,column_name,column_desc,column_type,column_url,banner_pic_type,tpl_path,sort_order,is_valid
+    from cms_column
+	    WHERE 1=1
+	    <include refid="sql_where" />
+		limit #firstResult#, #maxResult# 
+  </select>
+  
+  <select id="getCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+	select  count(1) from cms_column
+	where 1=1 
+    <include refid="sql_where" />
+  </select>
+</sqlMap>

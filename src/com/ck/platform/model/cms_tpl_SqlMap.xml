@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="cms_tpl">
+
+	<sql id="sql_where" >
+		<isNotEmpty property="isValid">
+		<![CDATA[ 
+			  and ( is_valid = #isValid# )
+		]]>
+		</isNotEmpty>	
+		<isNotEmpty property="siteId">
+		<![CDATA[ 
+			  and ( site_id = #siteId# )
+		]]>
+		</isNotEmpty>	
+		<isNotEmpty property="tplPath">
+		<![CDATA[ 
+			  and ( tpl_path = #tplPath# )
+		]]>
+		</isNotEmpty>	
+		<isNotEmpty property="tplPaths">
+		<![CDATA[ 
+			  and ( tpl_path in ($tplPaths$) )
+		]]>
+		</isNotEmpty>	
+		<isNotEmpty property="typeId">
+		<![CDATA[ 
+			  and ( type_id = #typeId# )
+		]]>
+		</isNotEmpty>
+		
+   </sql>
+  
+  <select id="selectByKey" resultClass="java.util.HashMap" >
+    select id,tpl_name,tpl_path,html_path,tpl_type,content,file_path,site_id,is_valid
+    from cms_tpl
+		where id = #id#
+  </select>
+ 
+  <select id="selectByParam" resultClass="java.util.HashMap" >
+    select id,tpl_name,tpl_path,html_path,tpl_type,content,file_path,site_id,is_valid
+    from cms_tpl
+    where 1=1
+    <include refid="sql_where" /> limit 0,1;
+  </select>
+  
+  <delete id="deleteByKey" parameterClass="java.util.HashMap">
+    delete from cms_tpl where
+    <isNotEmpty property="id">
+          id = #id# 
+ 	</isNotEmpty>
+  </delete>
+
+  <insert id="insert" parameterClass="java.util.HashMap">
+	    INSERT INTO cms_tpl (id,
+	    <dynamic prepend=" ">  
+	        	<isNotEmpty property="siteId" prepend=",">site_id</isNotEmpty>  
+			<isNotEmpty property="tplName" prepend=",">tpl_name</isNotEmpty>  
+			<isNotEmpty property="tplPath" prepend=",">tpl_path</isNotEmpty>
+			<isNotEmpty property="isValid" prepend=",">is_valid</isNotEmpty>
+            <isNotEmpty property="htmlPath" prepend=",">html_path</isNotEmpty>
+            <isNotEmpty property="typeId" prepend=",">type_id</isNotEmpty>  
+            <isNotEmpty property="content" prepend=",">content</isNotEmpty>  
+            <isNotEmpty property="filePath" prepend=",">file_path</isNotEmpty>  
+	    </dynamic>  
+	    <![CDATA[ 
+	        ) VALUES ( 
+	    ]]>  
+	    #id#,  
+	     <dynamic prepend=" ">  
+	        <isNotEmpty property="siteId" prepend=",">#siteId#</isNotEmpty>  
+			<isNotEmpty property="tplName" prepend=",">#tplName#</isNotEmpty>  
+			<isNotEmpty property="tplPath" prepend=",">#tplPath#</isNotEmpty>
+			<isNotEmpty property="isValid" prepend=",">#isValid#</isNotEmpty>
+			<isNotEmpty property="htmlPath" prepend=",">#htmlPath#</isNotEmpty>
+			<isNotEmpty property="typeId" prepend=",">#typeId#</isNotEmpty>  
+            <isNotEmpty property="content" prepend=",">#content#</isNotEmpty>  
+            <isNotEmpty property="filePath" prepend=",">#filePath#</isNotEmpty>
+	    </dynamic>  
+	    <![CDATA[ 
+	        ) 
+	    ]]>  
+    <selectKey  resultClass="long" keyProperty="id">
+        SELECT LAST_INSERT_ID() as id  from cms_tpl  Limit 1;
+	</selectKey>
+  </insert>
+  
+  <update id="updateByKey" parameterClass="java.util.HashMap">
+   	update cms_tpl
+  		<dynamic prepend="set" >
+		     <isNotEmpty prepend="," property="siteId" >
+        		site_id = #siteId:INTEGER#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="tplName" >
+        		tpl_name = #tplName:VARCHAR#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="tplPath" >
+        		tpl_path = #tplPath:VARCHAR#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="isValid" >
+        		is_valid = #isValid:INTEGER#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="htmlPath" >
+        		html_path = #htmlPath:VARCHAR#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="typeId" >
+        		type_id = #typeId:INTEGER#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="content" >
+        		content = #content#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="filePath" >
+        		file_path = #filePath:VARCHAR#
+			</isNotEmpty>
+		 </dynamic>
+		 where 
+		 <isNotEmpty  property="id" >
+		       id = #id#
+		 </isNotEmpty>
+  </update>
+  
+  <select id="getList" resultClass="java.util.HashMap" parameterClass="java.util.HashMap" >
+	 select id,tpl_name,tpl_path,html_path,tpl_type,content,file_path,site_id,is_valid
+    from cms_tpl
+	    WHERE 1=1
+	    <include refid="sql_where" />
+		limit #firstResult#, #maxResult# 
+  </select>
+  
+  <select id="getCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+	select  count(1) from cms_tpl
+	where 1=1 
+    <include refid="sql_where" />
+  </select>
+</sqlMap>

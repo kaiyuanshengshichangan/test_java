@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="customer_unite_social">
+
+	<sql id="sql_where" >
+ 		<isNotEmpty property="id">
+				<![CDATA[ 
+					  and id =#id#
+				]]>
+		</isNotEmpty>
+  	
+  	    <isNotEmpty property="customerId">
+               <![CDATA[ 
+                      and customer_id = #customerId#
+                ]]>
+		</isNotEmpty>
+		<isNotEmpty property="uniteOpenid">
+               <![CDATA[ 
+                      and unite_openid = #uniteOpenid#
+                ]]>
+		</isNotEmpty>
+		<isNotEmpty property="unionId">
+               <![CDATA[ 
+                      and union_id = #unionId#
+                ]]>
+		</isNotEmpty>
+ 		<isNotEmpty property="isValid">
+               <![CDATA[ 
+                      and is_valid = #isValid# 
+                ]]>
+		</isNotEmpty>	
+		<isNotEmpty property="channelId">
+               <![CDATA[ 
+                      and channel_id = #channelId# 
+                ]]>
+		</isNotEmpty>	
+   </sql>
+  
+  <select id="selectByKey" resultClass="java.util.HashMap" >
+    select id,customer_id,channel_id,unite_info,unite_follow_state,unite_follow_time,unite_openid,union_id,unite_nickname,unite_sex,unite_language,country_id,country
+    ,province_id,province,city_id,city,district_id,district,unite_head_logo,unite_remark,is_valid,site_id
+    from customer_unite_social
+    where id = #id#
+  </select>
+ 
+  <select id="selectByParam" resultClass="java.util.HashMap" >
+    select id,customer_id,channel_id,unite_info,unite_follow_state,unite_follow_time,unite_openid,union_id,unite_nickname,unite_sex,unite_language,country_id,country
+    ,province_id,province,city_id,city,district_id,district,unite_head_logo,unite_remark,is_valid,site_id
+    from customer_unite_social
+    where 1=1
+    <include refid="sql_where" /> limit 0,1;
+  </select>
+  
+  <delete id="deleteByKey" parameterClass="java.util.HashMap">
+    delete from customer_unite_social where
+    <isNotEmpty property="id">
+                      id = #id#
+ 	</isNotEmpty>
+ 	<isNotEmpty property="ids">
+                      id in ($ids$)
+ 	</isNotEmpty>
+  </delete>
+
+  <insert id="insert" parameterClass="java.util.HashMap">
+	    INSERT INTO customer_unite_social (id,
+	    <dynamic prepend=" ">  
+	            <isNotEmpty property="customerId" prepend=",">customer_id</isNotEmpty>  
+                <isNotEmpty property="channelId" prepend=",">channel_id</isNotEmpty>  
+                <isNotEmpty property="uniteInfo" prepend=",">unite_info</isNotEmpty>  
+                <isNotEmpty property="uniteFollowState" prepend=",">unite_follow_state</isNotEmpty>  
+                <isNotEmpty property="uniteFollowTime" prepend=",">unite_follow_time</isNotEmpty>
+                <isNotEmpty property="uniteOpenid" prepend=",">unite_openid</isNotEmpty>
+                <isNotEmpty property="unionId" prepend=",">union_id</isNotEmpty>
+                <isNotEmpty property="uniteNickname" prepend=",">unite_nickname</isNotEmpty>
+                <isNotEmpty property="uniteSex" prepend=",">unite_sex</isNotEmpty>             
+                <isNotEmpty property="uniteLanguage" prepend=",">unite_language</isNotEmpty>  
+                <isNotEmpty property="countryId" prepend=",">country_id</isNotEmpty>  
+                <isNotEmpty property="country" prepend=",">country</isNotEmpty>  
+                <isNotEmpty property="provinceId" prepend=",">province_id</isNotEmpty>  
+                <isNotEmpty property="province" prepend=",">province</isNotEmpty>
+                <isNotEmpty property="cityId" prepend=",">city_id</isNotEmpty>
+                <isNotEmpty property="city" prepend=",">city</isNotEmpty>
+                <isNotEmpty property="districtId" prepend=",">district_id</isNotEmpty>                
+                 <isNotEmpty property="district" prepend=",">district</isNotEmpty>
+                <isNotEmpty property="uniteHeadLogo" prepend=",">unite_head_logo</isNotEmpty>
+                <isNotEmpty property="uniteRemark" prepend=",">unite_remark</isNotEmpty>
+                <isNotEmpty property="isValid" prepend=",">is_valid</isNotEmpty>
+                 <isNotEmpty property="siteId" prepend=",">site_id</isNotEmpty>  
+	    </dynamic>  
+	    <![CDATA[ 
+	        ) VALUES ( 
+	    ]]>  
+	    #id#,  
+	     <dynamic prepend=" ">  
+	                <isNotEmpty property="customerId" prepend=",">#customerId#</isNotEmpty>  
+                <isNotEmpty property="channelId" prepend=",">#channelId#</isNotEmpty>  
+                <isNotEmpty property="uniteInfo" prepend=",">#uniteInfo#</isNotEmpty>  
+                <isNotEmpty property="uniteFollowState" prepend=",">#uniteFollowState#</isNotEmpty>  
+                <isNotEmpty property="uniteFollowTime" prepend=",">#uniteFollowTime#</isNotEmpty>
+                <isNotEmpty property="uniteOpenid" prepend=",">#uniteOpenid#</isNotEmpty>
+                <isNotEmpty property="unionId" prepend=",">#unionId#</isNotEmpty>
+                <isNotEmpty property="uniteNickname" prepend=",">#uniteNickname#</isNotEmpty>
+                <isNotEmpty property="uniteSex" prepend=",">#uniteSex#</isNotEmpty>             
+                <isNotEmpty property="uniteLanguage" prepend=",">#uniteLanguage#</isNotEmpty>  
+                <isNotEmpty property="countryId" prepend=",">#countryId#</isNotEmpty>  
+                <isNotEmpty property="country" prepend=",">#country#</isNotEmpty>  
+                <isNotEmpty property="provinceId" prepend=",">#provinceId#</isNotEmpty>  
+                <isNotEmpty property="province" prepend=",">#province#</isNotEmpty>
+                <isNotEmpty property="cityId" prepend=",">#cityId#</isNotEmpty>
+                <isNotEmpty property="city" prepend=",">#city#</isNotEmpty>
+                <isNotEmpty property="districtId" prepend=",">#districtId#</isNotEmpty>                
+                 <isNotEmpty property="district" prepend=",">#district#</isNotEmpty>
+                <isNotEmpty property="uniteHeadLogo" prepend=",">#uniteHeadLogo#</isNotEmpty>
+                <isNotEmpty property="uniteRemark" prepend=",">#uniteRemark#</isNotEmpty>
+                <isNotEmpty property="isValid" prepend=",">#isValid#</isNotEmpty>
+                <isNotEmpty property="siteId" prepend=",">#siteId#</isNotEmpty>  
+	    </dynamic>  
+	    <![CDATA[ 
+	        ) 
+	    ]]>  
+    <selectKey  resultClass="long" keyProperty="id">
+        SELECT LAST_INSERT_ID() as id  from customer_unite_social  Limit 1;
+	</selectKey>
+  </insert>
+  
+  <update id="updateByKey" parameterClass="java.util.HashMap">
+   	update customer_unite_social
+  		<dynamic prepend="set" >
+		     <isNotEmpty prepend="," property="customerId" >
+        customer_id = #customerId:BIGINT#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="channelId:INTEGER" >
+        channel_id = #channelId:INTEGER#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="uniteInfo" >
+        unite_info = #uniteInfo:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="uniteFollowState" >
+        unite_follow_state = #uniteFollowState:INTEGER#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="uniteFollowTime" >
+        unite_follow_time = #uniteFollowTime:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="uniteOpenid" >
+        unite_openid = #uniteOpenid:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="unionId" >
+        union_id = #unionId:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="uniteNickname" >
+        unite_nickname = #uniteNickname:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="uniteSex" >
+        unite_sex = #uniteSex:INTEGER#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="uniteLanguage" >
+        unite_language = #uniteLanguage:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="countryId" >
+        country_id = #countryId:INTEGER#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="country" >
+        country = #country:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="provinceId" >
+        province_id = #provinceId:INTEGER#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="province" >
+        province = #province:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="cityId" >
+        city_id = #cityId:INTEGER#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="city" >
+        city = #city:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="districtId" >
+        district_id = #districtId:INTEGER#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="district" >
+        district = #district:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="uniteHeadLogo" >
+        unite_head_logo = #uniteHeadLogo:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="uniteRemark" >
+        unite_remark = #uniteRemark:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="isValid" >
+        is_valid = #isValid:INTEGER#
+      </isNotEmpty>
+      <isNotEmpty prepend="," property="sendSiteId" >
+        site_id = #siteId:INTEGER#
+      </isNotEmpty>
+		     
+		 </dynamic>
+		 where 
+		 <isNotEmpty  property="id" >
+		       id = #id:INTEGER#
+		 </isNotEmpty>
+		 <isNotEmpty  property="customerIdFilter" >
+		       customer_id = #customerIdFilter#
+		       channel_id = #channelId#
+		 </isNotEmpty>
+		 <isNotEmpty  property="uniteOpenIdFilter" >
+		       unite_openid = #uniteOpenIdFilter#
+		       channel_id = #channelId#
+		 </isNotEmpty>
+  </update>
+  
+  <select id="getList" resultClass="java.util.HashMap" parameterClass="java.util.HashMap" >
+	 select id,customer_id,channel_id,unite_info,unite_follow_state,unite_follow_time,unite_openid,union_id,unite_nickname,unite_sex,unite_language,country_id,country
+    ,province_id,province,city_id,city,district_id,district,unite_head_logo,unite_remark,is_valid,site_id
+    from customer_unite_social
+	    WHERE 1=1
+	    <include refid="sql_where" />
+		limit #firstResult#, #maxResult# 
+  </select>
+  
+  <select id="getCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+	select  count(1) from customer_unite_social
+	where 1=1 
+    <include refid="sql_where" />
+  </select>
+</sqlMap>

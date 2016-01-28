@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMapConfig PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN"               
+"http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+<sqlMapConfig>
+	<settings cacheModelsEnabled="true" enhancementEnabled="true"
+		lazyLoadingEnabled="true" errorTracingEnabled="true" maxRequests="32"
+		maxSessions="15" maxTransactions="5" useStatementNamespaces="true" />
+		
+		<!--会员  -->
+	 	<sqlMap resource="com/ck/platform/model/customer_unite_SqlMap.xml"/>
+	 	<sqlMap resource="com/ck/platform/model/customer_info_SqlMap.xml"/>
+	 	<sqlMap resource="com/ck/platform/model/customer_receive_address_SqlMap.xml"/>
+	 	<sqlMap resource="com/ck/platform/model/customer_verification_SqlMap.xml"/>
+	 	<sqlMap resource="com/ck/platform/model/customer_unite_social_SqlMap.xml"/>
+	 	
+	 	<!--商品  -->
+	 	<sqlMap resource="com/ck/platform/model/product_info_SqlMap.xml"/>
+	 	
+	 	<!--基础数据  -->
+	 	<sqlMap resource="com/ck/platform/model/comm_data_SqlMap.xml"/>
+	 	<sqlMap resource="com/ck/platform/model/comm_region_SqlMap.xml"/>
+	 	<sqlMap resource="com/ck/platform/model/comm_wechat_token_SqlMap.xml"/>
+	 	
+	 	<!--系统数据  -->
+	 	<sqlMap resource="com/ck/platform/model/system_user_SqlMap.xml"/>
+	 	<sqlMap resource="com/ck/platform/model/system_menu_SqlMap.xml"/>
+	 	
+	 	<!--订单  -->
+	 	<sqlMap resource="com/ck/platform/model/order_info_SqlMap.xml"/>
+	 	<sqlMap resource="com/ck/platform/model/order_product_SqlMap.xml"/>
+	 	<sqlMap resource="com/ck/platform/model/order_inv_SqlMap.xml"/>
+	 	
+	 	<!--内容  -->
+	 	<sqlMap resource="com/ck/platform/model/cms_column_product_SqlMap.xml"/>
+	 	
+	 	<!-- 日志 -->
+	 	<sqlMap resource="com/ck/platform/model/log_customer_browse_SqlMap.xml"/>
+	 	<sqlMap resource="com/ck/platform/model/log_order_payment_SqlMap.xml"/>
+</sqlMapConfig>

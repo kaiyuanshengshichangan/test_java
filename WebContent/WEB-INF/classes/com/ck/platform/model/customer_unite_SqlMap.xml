@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="customer_unite">
+
+	<sql id="sql_where" >
+ 		<isNotEmpty property="customerId">
+                      and customer_id = #customerId#
+ 		</isNotEmpty>
+ 		<isNotEmpty property="nickName">
+                      and nick_name like concat('%',#nickName#,'%') 
+ 		</isNotEmpty>
+ 		<isNotEmpty property="email">
+                      and email = #email#
+ 		</isNotEmpty>
+ 		<isNotEmpty property="mobile">
+                      and mobile = #mobile#
+ 		</isNotEmpty>
+ 		<isNotEmpty property="username">
+                      and username = #username#
+ 		</isNotEmpty>
+ 		<isNotEmpty property="account">
+                      and (mobile = #account# or email = #account# or username = #account#)
+ 		</isNotEmpty>
+ 		<isNotEmpty property="status">
+                      and status = #status#
+ 		</isNotEmpty>
+ 		<isNotEmpty property="isValid">
+                      and is_valid = #isValid#
+ 		</isNotEmpty>
+ 		<isNotEmpty property="sqlFilter">
+                      and $sqlFilter$
+ 		</isNotEmpty>
+   </sql>
+  
+  <select id="selectByKey" resultClass="java.util.HashMap" >
+    select id,customer_id,username,nickname,mobile,email,passwd,init_passwd,is_check_mobile,is_check_email,create_time,site_id,status,is_valid 
+    from customer_unite
+    where id = #id# or customer_id=#id#
+  </select>
+ 
+  <select id="selectByParam" resultClass="java.util.HashMap" >
+    select id,customer_id,username,nickname,mobile,email,passwd,init_passwd,is_check_mobile,is_check_email,create_time,site_id,status,is_valid 
+    from customer_unite
+    where 1=1
+    <include refid="sql_where" /> limit 0,1;
+  </select>
+  
+  <delete id="deleteByKey" parameterClass="java.util.HashMap">
+    delete from customer_unite where
+    <isNotEmpty property="id">
+                      id = #id#
+ 	</isNotEmpty>
+ 	<isNotEmpty property="ids">
+                      id in ($ids$)
+ 	</isNotEmpty>
+  </delete>
+
+  <insert id="insert" parameterClass="java.util.HashMap">
+	    INSERT INTO customer_unite (id,
+	    <dynamic prepend=" ">  
+	                <isNotEmpty property="customerId" prepend=",">customer_id</isNotEmpty>  
+	                <isNotEmpty property="username" prepend=",">username</isNotEmpty> 
+	                <isNotEmpty property="nickname" prepend=",">nickname</isNotEmpty>
+	                <isNotEmpty property="mobile" prepend=",">mobile</isNotEmpty>
+	                <isNotEmpty property="email" prepend=",">email</isNotEmpty>
+	                <isNotEmpty property="passwd" prepend=",">passwd</isNotEmpty>
+	                <isNotEmpty property="initPasswd" prepend=",">init_passwd</isNotEmpty>
+	                <isNotEmpty property="isCheckMobile" prepend=",">is_check_mobile</isNotEmpty>
+	                <isNotEmpty property="isCheckEmail" prepend=",">is_check_email</isNotEmpty>
+	                <isNotEmpty property="siteId" prepend=",">site_id</isNotEmpty> 
+	                <isNotEmpty property="status" prepend=",">status</isNotEmpty>  
+	                <isNotEmpty property="isValid" prepend=",">is_valid</isNotEmpty>  
+	    </dynamic>  
+	    <![CDATA[ 
+	        ) VALUES ( 
+	    ]]>  
+	    #id#,  
+	     <dynamic prepend=" ">  
+	                <isNotEmpty property="customerId" prepend=",">#customerId#</isNotEmpty>  
+	                 <isNotEmpty property="username" prepend=",">#username#</isNotEmpty> 
+	                <isNotEmpty property="nickname" prepend=",">#nickname#</isNotEmpty>
+	                <isNotEmpty property="mobile" prepend=",">#mobile#</isNotEmpty>
+	                <isNotEmpty property="email" prepend=",">#email#</isNotEmpty>
+	                <isNotEmpty property="passwd" prepend=",">#passwd#</isNotEmpty>
+	                <isNotEmpty property="initPasswd" prepend=",">#initPasswd#</isNotEmpty>
+	                <isNotEmpty property="isCheckMobile" prepend=",">#isCheckMobile#</isNotEmpty>
+	                <isNotEmpty property="isCheckEmail" prepend=",">#isCheckEmail#</isNotEmpty>
+	                <isNotEmpty property="siteId" prepend=",">#siteId#</isNotEmpty> 
+	                <isNotEmpty property="status" prepend=",">#status#</isNotEmpty>  
+	                <isNotEmpty property="isValid" prepend=",">#isValid#</isNotEmpty>  
+	    </dynamic>  
+	    <![CDATA[ 
+	        ) 
+	    ]]>  
+    <selectKey  resultClass="long" keyProperty="id">
+        SELECT LAST_INSERT_ID() as id  from customer_unite  Limit 1;
+	</selectKey>
+  </insert>
+  
+  <update id="updateByKey" parameterClass="java.util.HashMap">
+   	update customer_unite
+  		<dynamic prepend="set" >
+		     <isNotEmpty prepend="," property="customerId" >
+		       customer_id = #customerId:VARCHAR#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="username" >
+		       username = #username#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="nickname" >
+		       nickname = #nickname#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="mobile" >
+		       mobile = #mobile#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="email" >
+		       email = #email#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="passwd" >
+		       passwd = #passwd#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="initPasswd" >
+		       init_passwd = #initPasswd#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="isCheckEmail" >
+		       is_check_email = #isCheckEmail#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="isCheckMobile" >
+		       is_check_mobile = #isCheckMobile#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="status" >
+		       status = #status#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="isValid" >
+		       is_valid = #isValid:BIGINT#
+		     </isNotEmpty>
+		     
+		 </dynamic>
+		 where 
+		 <isNotEmpty  property="id" >
+		       id = #id:INTEGER#
+		 </isNotEmpty>
+		 <isNotEmpty  property="customerId" >
+		       customer_id = #customerId:INTEGER#
+		 </isNotEmpty>
+  </update>
+  
+  <select id="getList" resultClass="java.util.HashMap" parameterClass="java.util.HashMap" >
+	  select id,customer_id,username,nickname,mobile,email,passwd,init_passwd,is_check_mobile,is_check_email,create_time,site_id,status,is_valid 
+    from customer_unite
+	    WHERE 1=1
+	    <include refid="sql_where" />
+		limit #firstResult#, #maxResult# 
+  </select>
+  
+  <select id="getCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+	select  count(1) from customer_unite
+	where 1=1 
+    <include refid="sql_where" />
+  </select>
+</sqlMap>

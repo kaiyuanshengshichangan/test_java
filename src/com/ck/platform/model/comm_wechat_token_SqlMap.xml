@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="comm_wechat_token">
+
+	<sql id="sql_where" >
+		<isNotEmpty property="appId" prepend="and">
+               <![CDATA[ 
+                     app_id =#appId#
+                ]]>
+		</isNotEmpty>
+		
+   </sql>
+  
+  <select id="selectByKey" resultClass="java.util.HashMap" >
+    select id,app_id,token,is_valid,update_time,remark
+		from comm_wechat_token
+		where id = #id#
+  </select>
+ 
+  <select id="selectByParam" resultClass="java.util.HashMap" >
+   select id,app_id,token,is_valid,update_time,remark
+		from comm_wechat_token
+    where 1=1
+    <include refid="sql_where" /> limit 0,1;
+  </select>
+  
+  <delete id="deleteByKey" parameterClass="java.util.HashMap">
+    delete from comm_wechat_token where
+    <isNotEmpty property="id">
+          id = #id# 
+ 	</isNotEmpty>
+ 	<isNotEmpty property="dataType">
+          data_type=#dataType#
+ 	</isNotEmpty>
+  </delete>
+
+  <insert id="insert" parameterClass="java.util.HashMap">
+	    INSERT INTO comm_wechat_token (id,
+	    <dynamic prepend=" ">  
+	        <isNotEmpty property="appId" prepend=",">app_id
+			</isNotEmpty>
+			<isNotEmpty property="token" prepend=",">token
+			</isNotEmpty>
+			<isNotEmpty property="updateTime" prepend=",">update_time
+			</isNotEmpty>
+			<isNotEmpty property="remark" prepend=",">remark
+			</isNotEmpty>
+			<isNotEmpty property="isValid" prepend=",">is_valid
+			</isNotEmpty>
+	    </dynamic>  
+	    <![CDATA[ 
+	        ) VALUES ( 
+	    ]]>  
+	    #id#,  
+	     <dynamic prepend=" ">  
+	        <isNotEmpty property="appId" prepend=",">#appId#
+			</isNotEmpty>
+			<isNotEmpty property="token" prepend=",">#token#
+			</isNotEmpty>
+			<isNotEmpty property="updateTime" prepend=",">#updateTime#
+			</isNotEmpty>
+			<isNotEmpty property="remark" prepend=",">#remark#
+			</isNotEmpty>
+			<isNotEmpty property="isValid" prepend=",">#isValid#
+			</isNotEmpty>
+	    </dynamic>  
+	    <![CDATA[ 
+	        ) 
+	    ]]>  
+    <selectKey  resultClass="long" keyProperty="id">
+        SELECT LAST_INSERT_ID() as id  from comm_wechat_token  Limit 1;
+	</selectKey>
+  </insert>
+  
+  <update id="updateByKey" parameterClass="java.util.HashMap">
+   	update comm_wechat_token
+  		<dynamic prepend="set" >
+			<isNotEmpty prepend="," property="token">
+				token =#token#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="updateTime">
+				update_time =#updateTime#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="remark">
+				remark =#remark#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="isValid">
+				is_valid =#isValid#
+			</isNotEmpty>
+		 </dynamic>
+		 where 
+		 <isNotEmpty  property="id" >
+		       id = #id#
+		 </isNotEmpty>
+		 <isNotEmpty  property="appId" >
+		       app_id = #appId#
+		 </isNotEmpty>
+  </update>
+  
+  <select id="getList" resultClass="java.util.HashMap" parameterClass="java.util.HashMap" >
+	 select id,app_id,token,is_valid,update_time,remark
+    from comm_wechat_token
+	    WHERE 1=1
+	    <include refid="sql_where" />
+		limit #firstResult#, #maxResult# 
+  </select>
+  
+  <select id="getCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+	select  count(1) from comm_wechat_token
+	where 1=1 
+    <include refid="sql_where" />
+  </select>
+</sqlMap>

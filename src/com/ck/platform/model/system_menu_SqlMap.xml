@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="system_menu">
+
+	<sql id="sql_where" >
+		<isNotEmpty property="parentId" prepend="and">
+               <![CDATA[ 
+                      parent_id =#parentId#
+                ]]>
+		</isNotEmpty>
+		<isNotEmpty property="menuName" prepend="and">
+               <![CDATA[ 
+                      menu_name like concat('%',#menuName#,'%')
+                ]]>
+		</isNotEmpty>
+   </sql>
+  
+  <select id="selectByKey" resultClass="java.util.HashMap" >
+    select id,menu_code,menu_name,menu_desc,menu_icon,page_id,page_url,page_operation,parent_id,sort_order,site_id,is_leaf,is_valid
+    		from system_menu
+		where id = #id#
+  </select>
+ 
+  <select id="selectByParam" resultClass="java.util.HashMap" >
+   select id,menu_code,menu_name,menu_desc,menu_icon,page_id,page_url,page_operation,parent_id,sort_order,site_id,is_leaf,is_valid
+   		from system_menu
+    where 1=1
+    <include refid="sql_where" /> limit 0,1;
+  </select>
+  
+  <delete id="deleteByKey" parameterClass="java.util.HashMap">
+    delete from system_menu where
+    <isNotEmpty property="id">
+          id = #id# 
+ 	</isNotEmpty>
+  </delete>
+
+  <insert id="insert" parameterClass="java.util.HashMap">
+	    INSERT INTO system_menu (id,
+	    <dynamic prepend=" ">  
+	        <isNotEmpty property="menuCode" prepend=",">menu_code</isNotEmpty>
+			<isNotEmpty property="menuName" prepend=",">menu_name</isNotEmpty>
+			<isNotEmpty property="menuDesc" prepend=",">menu_desc</isNotEmpty>
+			<isNotEmpty property="menuIcon" prepend=",">menu_icon</isNotEmpty>
+			<isNotEmpty property="pageId" prepend=",">page_id</isNotEmpty>
+	        <isNotEmpty property="pageUrl" prepend=",">page_url</isNotEmpty>
+			<isNotEmpty property="pageOperation" prepend=",">page_operation</isNotEmpty>
+			<isNotEmpty property="parentId" prepend=",">parent_id</isNotEmpty>
+			<isNotEmpty property="siteId" prepend=",">site_id</isNotEmpty>
+			<isNotEmpty property="isLeaf" prepend=",">is_leaf</isNotEmpty>
+			<isNotEmpty property="isValid" prepend=",">is_valid</isNotEmpty>
+	    </dynamic>  
+	    <![CDATA[ 
+	        ) VALUES ( 
+	    ]]>  
+	    #id#,  
+	     <dynamic prepend=" ">  
+	        <isNotEmpty property="menuCode" prepend=",">#menuCode#</isNotEmpty>
+			<isNotEmpty property="menuName" prepend=",">#menuName#</isNotEmpty>
+			<isNotEmpty property="menuDesc" prepend=",">#menuDesc#</isNotEmpty>
+			<isNotEmpty property="menuIcon" prepend=",">#menuIcon#</isNotEmpty>
+			<isNotEmpty property="pageId" prepend=",">#pageId#</isNotEmpty>
+	        <isNotEmpty property="pageUrl" prepend=",">#pageUrl#</isNotEmpty>
+			<isNotEmpty property="pageOperation" prepend=",">#pageOperation#</isNotEmpty>
+			<isNotEmpty property="parentId" prepend=",">#parentId#</isNotEmpty>
+			<isNotEmpty property="siteId" prepend=",">#siteId#</isNotEmpty>
+			<isNotEmpty property="isLeaf" prepend=",">#isLeaf#</isNotEmpty>
+			<isNotEmpty property="isValid" prepend=",">#isValid#</isNotEmpty>
+	    </dynamic>  
+	    <![CDATA[ 
+	        ) 
+	    ]]>  
+    <selectKey  resultClass="long" keyProperty="id">
+        SELECT LAST_INSERT_ID() as id  from system_menu  Limit 1;
+	</selectKey>
+  </insert>
+  
+  <update id="updateByKey" parameterClass="java.util.HashMap">
+   	update system_menu
+  		<dynamic prepend="set" >
+		     <isNotEmpty prepend="," property="id">
+				id =#id#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="menuCode">
+				menu_code =#menuCode#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="menuName">
+				menu_name =#menuName#
+			</isNotEmpty>
+			 <isNotEmpty prepend="," property="menuDesc" >
+		       menu_desc = #menuDesc#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="menuIcon" >
+		       menu_icon = #menuIcon#
+		     </isNotEmpty>
+			<isNotEmpty prepend="," property="pageUrl">
+				page_url =#pageUrl#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="pageOperation">
+				page_operation =#pageOperation#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="parentId">
+				parent_id =#parentId#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="sortOrder">
+				sort_order =#sortOrder#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="siteId">
+				site_id =#siteId#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="isLeaf">
+				is_leaf =#isLeaf#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="isValid">
+				is_valid =#isValid#
+			</isNotEmpty>
+			
+		 </dynamic>
+		 where 
+		 <isNotEmpty  property="id" >
+		       id = #id#
+		 </isNotEmpty>
+  </update>
+  
+  <select id="getList" resultClass="java.util.HashMap" parameterClass="java.util.HashMap" >
+	 select id,menu_code,menu_name,menu_desc,menu_icon,page_id,page_url,page_operation,parent_id,sort_order,site_id,is_leaf,is_valid
+	     from system_menu
+	    WHERE 1=1
+	    <include refid="sql_where" />
+		limit #firstResult#, #maxResult# 
+  </select>
+  
+  <select id="getCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+	select  count(1) from system_menu
+	where 1=1 
+    <include refid="sql_where" />
+  </select>
+</sqlMap>

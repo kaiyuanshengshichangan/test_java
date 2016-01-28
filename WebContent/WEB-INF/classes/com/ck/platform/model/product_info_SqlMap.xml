@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="product_info">
+
+	<sql id="sql_where" >
+ 		<isNotEmpty property="productId">
+               <![CDATA[ 
+                      and product_id = #productId#
+                ]]>
+ 		</isNotEmpty>
+   </sql>
+  
+  <select id="selectByKey" resultClass="java.util.HashMap" >
+    select id,product_id,product_name,product_type,product_price,original_price,cost_price,summary,stock,category_id,category_name,is_on_sale,remark,is_valid,create_time
+    from product_info
+    where id = #id# or product_id=#id#
+  </select>
+ 
+  <select id="selectByParam" resultClass="java.util.HashMap" >
+    select id,product_id,product_name,product_type,product_price,original_price,cost_price,summary,stock,category_id,category_name,is_on_sale,remark,is_valid,create_time
+    from product_info
+    where 1=1
+    <include refid="sql_where" /> limit 0,1;
+  </select>
+  
+  <delete id="deleteByKey" parameterClass="java.util.HashMap">
+    delete from product_info where
+    <isNotEmpty property="id">
+                      id = #id# or product_id=#id#
+ 	</isNotEmpty>
+ 	<isNotEmpty property="ids">
+                      id in ($ids$)
+ 	</isNotEmpty>
+  </delete>
+
+  <insert id="insert" parameterClass="java.util.HashMap">
+	    INSERT INTO product_info (id,
+	    <dynamic prepend=" ">  
+	                <isNotEmpty property="productId" prepend=",">product_id</isNotEmpty>  
+	                <isNotEmpty property="productName" prepend=",">product_name</isNotEmpty> 
+	                <isNotEmpty property="productType" prepend=",">product_type</isNotEmpty>
+	                <isNotEmpty property="productPrice" prepend=",">product_price</isNotEmpty>
+	                <isNotEmpty property="originalPrice" prepend=",">original_price</isNotEmpty>
+	                <isNotEmpty property="costPrice" prepend=",">cost_price</isNotEmpty>
+	                <isNotEmpty property="summary" prepend=",">summary</isNotEmpty>
+	                <isNotEmpty property="stock" prepend=",">stock</isNotEmpty>
+	                <isNotEmpty property="categoryId" prepend=",">category_id</isNotEmpty>
+	                <isNotEmpty property="categoryName" prepend=",">category_name</isNotEmpty>
+	                <isNotEmpty property="isOnSale" prepend=",">is_on_sale</isNotEmpty> 
+	                <isNotEmpty property="remark" prepend=",">remark</isNotEmpty>  
+	                <isNotEmpty property="isValid" prepend=",">is_valid</isNotEmpty> 
+	    </dynamic>  
+	    <![CDATA[ 
+	        ) VALUES ( 
+	    ]]>  
+	    #id#,  
+	     <dynamic prepend=" ">  
+	                <isNotEmpty property="productId" prepend=",">#productId#</isNotEmpty>  
+	                 <isNotEmpty property="productName" prepend=",">#productName#</isNotEmpty> 
+	                <isNotEmpty property="productType" prepend=",">#productType#</isNotEmpty>
+	                <isNotEmpty property="productPrice" prepend=",">#productPrice#</isNotEmpty>
+	                <isNotEmpty property="originalPrice" prepend=",">#originalPrice#</isNotEmpty>
+	                <isNotEmpty property="costPrice" prepend=",">#costPrice#</isNotEmpty>
+	                <isNotEmpty property="summary" prepend=",">#summary#</isNotEmpty>
+	                <isNotEmpty property="stock" prepend=",">#stock#</isNotEmpty>
+	                <isNotEmpty property="categoryId" prepend=",">#categoryId#</isNotEmpty>
+	                <isNotEmpty property="categoryName" prepend=",">#categoryName#</isNotEmpty>
+	                <isNotEmpty property="isOnSale" prepend=",">#isOnSale#</isNotEmpty> 
+	                <isNotEmpty property="remark" prepend=",">#remark#</isNotEmpty>  
+	                <isNotEmpty property="isValid" prepend=",">#isValid#</isNotEmpty>  
+	    </dynamic>  
+	    <![CDATA[ 
+	        ) 
+	    ]]>  
+    <selectKey  resultClass="long" keyProperty="id">
+        SELECT LAST_INSERT_ID() as id  from product_info  Limit 1;
+	</selectKey>
+  </insert>
+  
+  <update id="updateByKey" parameterClass="java.util.HashMap">
+   	update product_info
+  		<dynamic prepend="set" >
+		     <isNotEmpty prepend="," property="productName" >
+		       product_name = #productName#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="productType" >
+		       product_type = #productType#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="productPrice" >
+		       product_price = #productPrice#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="originalPrice" >
+		       original_price = #originalPrice#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="summary" >
+		       summary = #summary#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="stock" >
+		       stock = #stock#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="categoryId" >
+		       category_id = #categoryId#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="categoryName" >
+		       category_name = #categoryName#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="isOnSale" >
+		       is_on_sale = #isOnSale#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="remark" >
+		       remark = #remark#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="isValid" >
+		       is_valid = #isValid#
+		     </isNotEmpty>
+		 </dynamic>
+		 where 
+		 <isNotEmpty  property="id" >
+		       id = #id#
+		 </isNotEmpty>
+		 <isNotEmpty  property="productId" >
+		       product_id = #productId#
+		 </isNotEmpty>
+  </update>
+  
+  <select id="getList" resultClass="java.util.HashMap" parameterClass="java.util.HashMap" >
+	 select id,product_id,product_name,product_type,product_price,original_price,cost_price,summary,stock,category_id,category_name,is_on_sale,remark,is_valid,create_time
+    from product_info
+	    WHERE 1=1
+	    <include refid="sql_where" />
+		limit #firstResult#, #maxResult# 
+  </select>
+  
+  <select id="getCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+	select  count(1) from product_info
+	where 1=1 
+    <include refid="sql_where" />
+  </select>
+</sqlMap>

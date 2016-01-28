@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:compass="http://www.compass-project.org/schema/spring-core-config"
+	xmlns:context="http://www.springframework.org/schema/context" 
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/context 
+	http://www.springframework.org/schema/context/spring-context-3.0.xsd
+	http://www.springframework.org/schema/tx  
+	http://www.springframework.org/schema/tx/spring-tx.xsd
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop.xsd
+	http://www.compass-project.org/schema/spring-core-config 
+	http://www.compass-project.org/schema/spring-compass-core-config-2.2.xsd
+	">
+
+
+	<!-- 分散配置(指定外部的属性文件) -->
+	<context:property-placeholder location="classpath:resources/config/jdbc.properties,classpath:resources/config/system_constant.properties,classpath:resources/config/mail.properties" />
+	
+	<!-- 使Spring关注Annotation -->
+	<context:annotation-config />
+	
+	<!-- 让Spring通过自动扫描来查询和管理Bean -->
+	<context:component-scan base-package="com.ck.platform" />
+    <bean id="spring" class="com.ck.platform.base.util.spring.SpringUtil" /> 
+    
+
+<!--  数据源配置 -->
+    <bean id="masterDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource" >
+        <property name="driverClassName" value="${master.jdbc.driverClassName}" />   
+        <property name="url" value="${master.jdbc.url}" />   
+        <property name="username" value="${master.jdbc.username}" />   
+        <property name="password" value="${master.jdbc.password}" />  
+      <!-- 
+        <property name="initialSize" value="${c3p0.pool.inisize}" />
+		<property name="maxActive" value="${c3p0.pool.maxsize}" />
+		<property name="removeAbandoned" value="true" />
+		<property name="removeAbandonedTimeout" value="${c3p0.pool.timeout}" /> 
+		<property name="acquireIncrement" value="${c3p0.pool.increment}"/> -->
+    </bean>   
+       
+    <bean id="slaveDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource" >
+        <property name="driverClassName" value="${slave.jdbc.driverClassName}" />   
+        <property name="url" value="${slave.jdbc.url}" />   
+        <property name="username" value="${slave.jdbc.username}" />   
+        <property name="password" value="${slave.jdbc.password}" />
+        <!-- 
+        <property name="initialSize" value="${c3p0.pool.inisize}" />
+		<property name="maxActive" value="${c3p0.pool.maxsize}" />
+		<property name="removeAbandoned" value="true" />
+		<property name="removeAbandonedTimeout" value="${c3p0.pool.timeout}" />
+		-->
+    </bean>
+
+   <bean id="dataSource" class="com.ck.platform.base.util.aop.rw.split.DynamicDataSource">   
+        <property name="targetDataSources">   
+            <map key-type="java.lang.String">   
+                <entry key="slave" value-ref="slaveDataSource" />
+            </map>
+        </property>   
+        <property name="defaultTargetDataSource" ref="masterDataSource" />   
+    </bean>  
+
+
+ <!-- 切换数据源 -->   
+    <bean id="dataSourceAdvice" class="com.ck.platform.base.util.aop.rw.split.DataSourceAdvice" />   
+    <aop:config>   
+        <aop:advisor   
+            pointcut="execution(* com.*.platform.*.service..*Service.*(..))"
+            advice-ref="dataSourceAdvice" />   
+    </aop:config>   
+
+
+
+	<!-- 配置事务管理器 -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">  
+        <property name="dataSource" ref="dataSource" />  
+    </bean>  
+
+	<!--使用基于注解方式配置事务 -->
+    <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/>
+	<!-- 事物回滚拦截 -->
+    <bean id="transactionInterceptor" class="org.springframework.transaction.interceptor.TransactionInterceptor"> 
+    	<property name="transactionManager" ref="transactionManager"/> 
+                <property name="transactionAttributes"> 
+	                <props> 
+	                <prop key="create*">PROPAGATION_REQUIRED</prop> 
+	                <prop key="delete*">PROPAGATION_REQUIRED</prop> 
+	                <prop key="update*">PROPAGATION_REQUIRED</prop> 
+	                <prop key="execute*">PROPAGATION_REQUIRED</prop>
+	            </props> 
+         </property> 
+     </bean> 
+      
+    <!-- 配置ibatis -->
+    <bean id="sqlMapClient"
+		class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+		<property name="configLocation">
+			<value>classpath:resources/config/sql-map-config.xml</value>
+		</property> 
+		
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+	</bean>
+  
+      
+    <!-- 事物过滤器-->  
+    <bean id="autoProxyCreator" class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">  
+        <property name="beanNames">  
+          <list>
+          	<value>*Service</value> 
+          </list>
+        </property>  
+        <property name="interceptorNames">  
+            <list>  
+            <value>transactionInterceptor</value>    
+            </list>  
+        </property>  
+    </bean>  
+   
+
+
+	
+
+</beans>
+
+  

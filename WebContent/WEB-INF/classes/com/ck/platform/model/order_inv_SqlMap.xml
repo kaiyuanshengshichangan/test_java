@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="order_inv">
+
+	<sql id="sql_where" >
+		<isNotEmpty property="customerId">
+               <![CDATA[ 
+                      and customer_id = #customerId#
+                ]]>
+ 		</isNotEmpty>
+ 		<isNotEmpty property="orderId">
+               <![CDATA[ 
+                      and order_id = #orderId#
+                ]]>
+ 		</isNotEmpty>
+   </sql>
+  
+  <select id="selectByKey" resultClass="java.util.HashMap" >
+    select id,order_id,inv_title,inv_type,inv_content,inv_money,province_id,province,city_id,city,district_id,district
+    ,receive_address,receive_name,receive_mobile,zip_code,inv_status
+    from order_inv
+    where id = #id# or order_id=#id#
+  </select>
+ 
+  <select id="selectByParam" resultClass="java.util.HashMap" >
+    select id,order_id,inv_title,inv_type,inv_content,inv_money,province_id,province,city_id,city,district_id,district
+    ,receive_address,receive_name,receive_mobile,zip_code,inv_status
+    from order_inv
+    where 1=1
+    <include refid="sql_where" /> limit 0,1;
+  </select>
+  <!-- 
+  <delete id="deleteByKey" parameterClass="java.util.HashMap">
+    delete from order_inv where
+    <isNotEmpty property="id">
+          id = #id# or order_id=#id#
+ 	</isNotEmpty>
+  </delete>
+ -->
+
+  <insert id="insert" parameterClass="java.util.HashMap">
+	    INSERT INTO order_inv (id,
+	    <dynamic prepend=" ">  
+	                <isNotEmpty property="orderId" prepend=",">order_id</isNotEmpty>  
+	                <isNotEmpty property="invTitle" prepend=",">inv_title</isNotEmpty> 
+	                <isNotEmpty property="invType" prepend=",">inv_type</isNotEmpty>
+	                <isNotEmpty property="invContent" prepend=",">inv_content</isNotEmpty>
+	                <isNotEmpty property="invMoney" prepend=",">inv_money</isNotEmpty>
+	                <isNotEmpty property="provinceId" prepend=",">province_id</isNotEmpty>
+	                <isNotEmpty property="province" prepend=",">province</isNotEmpty> 
+	                <isNotEmpty property="cityId" prepend=",">city_id</isNotEmpty> 
+	                <isNotEmpty property="city" prepend=",">city</isNotEmpty> 
+	                <isNotEmpty property="districtId" prepend=",">district_id</isNotEmpty> 
+	                <isNotEmpty property="district" prepend=",">district</isNotEmpty> 
+	                <isNotEmpty property="receiveAddress" prepend=",">receive_address</isNotEmpty> 
+	                <isNotEmpty property="receiveName" prepend=",">receive_name</isNotEmpty> 
+	                <isNotEmpty property="receiveMobile" prepend=",">receive_mobile</isNotEmpty> 
+	                <isNotEmpty property="zipCode" prepend=",">zip_code</isNotEmpty> 
+	                <isNotEmpty property="invStatus" prepend=",">inv_status</isNotEmpty> 
+	    </dynamic>  
+	    <![CDATA[ 
+	        ) VALUES ( 
+	    ]]>  
+	    #id#,  
+	     <dynamic prepend=" ">  
+	                <isNotEmpty property="orderId" prepend=",">#orderId#</isNotEmpty>  
+	                 <isNotEmpty property="invTitle" prepend=",">#invTitle#</isNotEmpty> 
+	                <isNotEmpty property="invType" prepend=",">#invType#</isNotEmpty>
+	                <isNotEmpty property="invContent" prepend=",">#invContent#</isNotEmpty>
+	                <isNotEmpty property="invMoney" prepend=",">#invMoney#</isNotEmpty>
+	                <isNotEmpty property="provinceId" prepend=",">#provinceId#</isNotEmpty>  
+	                <isNotEmpty property="province" prepend=",">#province#</isNotEmpty>  
+	                <isNotEmpty property="cityId" prepend=",">#cityId#</isNotEmpty>  
+	                <isNotEmpty property="city" prepend=",">#city#</isNotEmpty>  
+	                <isNotEmpty property="districtId" prepend=",">#districtId#</isNotEmpty>  
+	                <isNotEmpty property="district" prepend=",">#district#</isNotEmpty>  
+	                <isNotEmpty property="receiveAddress" prepend=",">#receiveAddress#</isNotEmpty>  
+	                <isNotEmpty property="receiveName" prepend=",">#receiveName#</isNotEmpty>  
+	                <isNotEmpty property="receiveMobile" prepend=",">#receiveMobile#</isNotEmpty>
+	                <isNotEmpty property="zipCode" prepend=",">#zipCode#</isNotEmpty>
+	                <isNotEmpty property="invStatus" prepend=",">##invStatus##</isNotEmpty> 
+	    </dynamic>  
+	    <![CDATA[ 
+	        ) 
+	    ]]>  
+    <selectKey  resultClass="long" keyProperty="id">
+        SELECT LAST_INSERT_ID() as id  from order_inv  Limit 1;
+	</selectKey>
+  </insert>
+   
+  <update id="updateByKey" parameterClass="java.util.HashMap">
+   	update order_inv
+  		<dynamic prepend="set" >
+		     <isNotEmpty prepend="," property="invTitle" >
+		       inv_title = #invTitle#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="invType" >
+		       inv_type = #invType#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="invContent" >
+		       inv_content = #invContent#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="invMoney" >
+		       inv_money = #invMoney#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="zipCode" >
+		       zip_code = #zipCode#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="provinceId" >
+		       province_id = #provinceId#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="province" >
+		       province = #province#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="cityId" >
+		       city_id = #cityId#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="city" >
+		       city = #city#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="districtId" >
+		       district_id = #districtId#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="district" >
+		       district = #district#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="receiveAddress" >
+		       receive_address = #receiveAddress#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="receiveName" >
+		       receive_name = #receiveName#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="receiveMbile" >
+		       receive_mobile = #receiveMbile#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="inv_status" >
+		       inv_status = #invStatus#
+		     </isNotEmpty>
+		 </dynamic>
+		 where 
+		 <isNotEmpty  property="id" >
+		       id = #id#
+		 </isNotEmpty>
+		 <isNotEmpty  property="orderId" >
+		       order_id = #orderId#
+		 </isNotEmpty>
+  </update>
+  
+  <select id="getList" resultClass="java.util.HashMap" parameterClass="java.util.HashMap" >
+	 select id,order_id,inv_title,inv_type,inv_content,inv_money,province_id,province,city_id,city,district_id,district
+    ,receive_address,receive_name,receive_mobile,zip_code,inv_status
+    from order_inv   
+	    WHERE 1=1
+	    <include refid="sql_where" />
+		limit #firstResult#, #maxResult# 
+  </select>
+  
+  <select id="getCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+	select  count(1) from order_inv
+	where 1=1 
+    <include refid="sql_where" />
+  </select>
+</sqlMap>

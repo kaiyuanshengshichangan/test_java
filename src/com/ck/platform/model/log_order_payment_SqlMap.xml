@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="log_order_payment">
+
+	<sql id="sql_where" >
+ 		<isNotEmpty property="orderId">
+               <![CDATA[ 
+                      and order_id = #orderId#
+                ]]>
+ 		</isNotEmpty>
+   </sql>
+  
+  <select id="selectByKey" resultClass="java.util.HashMap" >
+    select id,order_id,pay_mode,pay_detail,pay_money,trade_no,is_success,notify_type,buyer_id,buyer_account,return_msg,notify_time,create_time,is_valid
+    from log_order_payment
+    where id = #id#
+  </select>
+ 
+  <select id="selectByParam" resultClass="java.util.HashMap" >
+    select id,order_id,pay_mode,pay_detail,pay_money,trade_no,is_success,notify_type,buyer_id,buyer_account,return_msg,notify_time,create_time,is_valid
+    from log_order_payment
+    where 1=1
+    <include refid="sql_where" /> limit 0,1;
+  </select>
+  
+  <delete id="deleteByKey" parameterClass="java.util.HashMap">
+    delete from log_order_payment where
+    <isNotEmpty property="id">
+                      id = #id#
+ 	</isNotEmpty>
+ 	<isNotEmpty property="ids">
+                      id in ($ids$)
+ 	</isNotEmpty>
+  </delete>
+
+  <insert id="insert" parameterClass="java.util.HashMap">
+	    INSERT INTO log_order_payment (id,
+	    <dynamic prepend=" ">  
+	            <isNotEmpty property="orderId" prepend=",">order_id</isNotEmpty>
+	            <isNotEmpty property="payMode" prepend=",">pay_mode</isNotEmpty>
+                <isNotEmpty property="payDetail" prepend=",">pay_detail</isNotEmpty>
+                <isNotEmpty property="payMoney" prepend=",">pay_money</isNotEmpty>
+                <isNotEmpty property="tradeNo" prepend=",">trade_no</isNotEmpty>
+                <isNotEmpty property="isSuccess" prepend=",">is_success</isNotEmpty>
+                <isNotEmpty property="notifyType" prepend=",">notify_type</isNotEmpty>
+                <isNotEmpty property="buyerId" prepend=",">buyer_id</isNotEmpty>
+                <isNotEmpty property="buyerAccount" prepend=",">buyer_account</isNotEmpty>
+                <isNotEmpty property="returnMsg" prepend=",">return_msg</isNotEmpty>
+                <isNotEmpty property="notifyTime" prepend=",">notify_time</isNotEmpty>
+                <isNotEmpty property="createTime" prepend=",">create_time</isNotEmpty>
+                <isNotEmpty property="isValid" prepend=",">is_valid</isNotEmpty>
+	    </dynamic>  
+	    <![CDATA[ 
+	        ) VALUES ( 
+	    ]]>  
+	    #id#,  
+	     <dynamic prepend=" ">  
+	            <isNotEmpty property="orderId" prepend=",">#orderId#</isNotEmpty>
+	            <isNotEmpty property="payMode" prepend=",">#payMode#</isNotEmpty>
+                <isNotEmpty property="payDetail" prepend=",">#payDetail#</isNotEmpty>
+                <isNotEmpty property="payMoney" prepend=",">#payMoney#</isNotEmpty>
+                <isNotEmpty property="tradeNo" prepend=",">#tradeNo#</isNotEmpty>
+                <isNotEmpty property="isSuccess" prepend=",">#isSuccess#</isNotEmpty>
+                <isNotEmpty property="notifyType" prepend=",">#notifyType#</isNotEmpty>
+                <isNotEmpty property="buyerId" prepend=",">#buyerId#</isNotEmpty>
+                <isNotEmpty property="buyerAccount" prepend=",">#buyerAccount#</isNotEmpty>
+                <isNotEmpty property="returnMsg" prepend=",">#returnMsg#</isNotEmpty>
+                <isNotEmpty property="notifyTime" prepend=",">#notifyTime#</isNotEmpty>
+                <isNotEmpty property="createTime" prepend=",">now()</isNotEmpty>
+                <isNotEmpty property="isValid" prepend=",">#isValid#</isNotEmpty> 
+	    </dynamic>  
+	    <![CDATA[ 
+	        ) 
+	    ]]>  
+    <selectKey  resultClass="long" keyProperty="id">
+        SELECT LAST_INSERT_ID() as id  from log_order_payment  Limit 1;
+	</selectKey>
+  </insert>
+  
+  <update id="updateByKey" parameterClass="java.util.HashMap">
+   	update log_order_payment
+  		<dynamic prepend="set" >
+		     <isNotEmpty prepend="," property="payMode" >
+		       pay_mode = #payMode#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="payDetail" >
+		       pay_detail = #payDetail#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="payMoney" >
+		       pay_money = #payMoney#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="tradeNo" >
+		       trade_no = #tradeNo#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="isSuccess" >
+		       is_success = #isSuccess#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="notifyType" >
+		       notify_type = #notifyType#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="buyerId" >
+		       buyerId = #buyerId#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="buyerAccount" >
+		       buyer_account = #buyerAccount#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="returnMsg" >
+		       return_msg = #returnMsg#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="notifyTime" >
+		       notify_time = #notifyTime#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="isValid" >
+		       is_valid = #isValid#
+		     </isNotEmpty>
+		 </dynamic>
+		 where 
+		 <isNotEmpty  property="id" >
+		       id = #id:INTEGER#
+		 </isNotEmpty>
+		 <isNotEmpty  property="orderId" >
+		       order_id = #orderId#
+		 </isNotEmpty>
+  </update>
+  
+  <select id="getList" resultClass="java.util.HashMap" parameterClass="java.util.HashMap" >
+	  select id,order_id,pay_mode,pay_detail,pay_money,trade_no,is_success,notify_type,buyer_id,buyer_account,return_msg,notify_time,create_time,is_valid
+	     from log_order_payment
+	    WHERE 1=1
+	    <include refid="sql_where" />
+		limit #firstResult#, #maxResult# 
+  </select>
+  
+  <select id="getCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+	select  count(1) from log_order_payment
+	where 1=1 
+    <include refid="sql_where" />
+  </select>
+</sqlMap>

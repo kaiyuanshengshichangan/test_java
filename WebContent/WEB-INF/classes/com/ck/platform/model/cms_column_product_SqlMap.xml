@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="cms_column_product">
+
+	<sql id="sql_where" >
+ 		 <isNotEmpty  property="columnId">
+          	<isGreaterThan property="columnId" compareValue="0"> 
+                        <![CDATA[ and column_id = #columnId# ]]>
+            </isGreaterThan>	
+ 		</isNotEmpty> 		
+ 		<isNotEmpty  property="isValid">
+                        <![CDATA[ and is_valid =#isValid# ]]>	
+ 		</isNotEmpty> 		
+   </sql>
+  
+  <select id="selectByKey" resultClass="java.util.HashMap" >
+    select id, column_id,product_id,is_valid,sort_order
+    from cms_column_product
+		where id = #id#
+  </select>
+ 
+  <select id="selectByParam" resultClass="java.util.HashMap" >
+    select id, column_id,product_id,is_valid,sort_order
+    from cms_column_product
+    where 1=1
+    <include refid="sql_where" /> limit 0,1;
+  </select>
+  
+  <delete id="deleteByKey" parameterClass="java.util.HashMap">
+    delete from cms_column_product where
+    <isNotEmpty property="id">
+          id = #id# 
+ 	</isNotEmpty>
+ 	<isNotEmpty property="columnId">
+          column_id = #columnId# 
+ 	</isNotEmpty>
+ 	<isNotEmpty property="productIds">
+          product_id in (#productIds#)
+ 	</isNotEmpty>
+ 	
+  </delete>
+
+  <insert id="insert" parameterClass="java.util.HashMap">
+	    INSERT INTO cms_column_product (id,
+	    <dynamic prepend=" ">  
+	        	<isNotEmpty property="columnId" prepend=",">column_id</isNotEmpty>
+	        	<isNotEmpty property="productId" prepend=",">product_id</isNotEmpty> 
+	        	<isNotEmpty property="sortOrder" prepend=",">sort_order</isNotEmpty>   
+                <isNotEmpty property="isValid" prepend=",">is_valid</isNotEmpty>  
+	    </dynamic>  
+	    <![CDATA[ 
+	        ) VALUES ( 
+	    ]]>  
+	    #id#,  
+	     <dynamic prepend=" ">  
+	        	<isNotEmpty property="columnId" prepend=",">#columnId#</isNotEmpty>
+	        	<isNotEmpty property="productId" prepend=",">#productId#</isNotEmpty>
+	        	<isNotEmpty property="sortOrder" prepend=",">#sortOrder#</isNotEmpty>    
+                <isNotEmpty property="isValid" prepend=",">#isValid#</isNotEmpty>  
+	    </dynamic>  
+	    <![CDATA[ 
+	        ) 
+	    ]]>  
+    <selectKey  resultClass="long" keyProperty="id">
+        SELECT LAST_INSERT_ID() as id  from cms_column_product  Limit 1;
+	</selectKey>
+  </insert>
+  
+  <update id="updateByKey" parameterClass="java.util.HashMap">
+   	update cms_column_product
+  		<dynamic prepend="set" >
+		     <isNotEmpty  prepend="," property="columnId">
+			  	<isGreaterThan  property="columnId" compareValue="0"> 
+	                  <![CDATA[  column_id = #columnId# ]]>
+	            </isGreaterThan> 
+		 	  </isNotEmpty>	
+		      <isNotEmpty prepend="," property="productId">
+		       	  product_id = #productId#
+		      </isNotEmpty>
+		      <isNotEmpty prepend="," property="isValid" >
+		        is_valid = #isValid:INTEGER#
+		      </isNotEmpty>
+		      <isNotEmpty prepend="," property="sortOrder">
+		        sort_order = #sortOrder#
+		      </isNotEmpty>
+		 </dynamic>
+		 where 
+		 <isNotEmpty  property="id" >
+		       id = #id#
+		 </isNotEmpty>
+  </update>
+  
+  <select id="getList" resultClass="java.util.HashMap" parameterClass="java.util.HashMap" >
+	 select c.id,c.column_id,c.product_id,c.sort_order,c.is_valid,p.product_name,p.product_type,p.product_price,p.stock,p.is_on_sale
+    from cms_column_product c left join product_info p on c.product_id=p.product_id
+	    WHERE  p.is_valid=1
+	     <isNotEmpty  property="isValid">
+                   and c.is_valid = #isValid#
+ 		</isNotEmpty>
+	    <isNotEmpty  property="columnId">
+                   and c.column_id = #columnId#
+ 		</isNotEmpty>
+ 		<isNotEmpty  property="isOnSale">
+                   and p.is_on_sale = #isOnSale#
+ 		</isNotEmpty>
+		limit #firstResult#, #maxResult# 
+  </select>
+  
+  <select id="getCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+	select  count(1) from cms_column_product
+	where 1=1 
+    <include refid="sql_where" />
+  </select>
+  
+</sqlMap>

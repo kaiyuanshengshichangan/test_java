@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE abatorConfiguration PUBLIC "-//Apache Software Foundation//DTD Abator for iBATIS Configuration 1.0//EN" "http://ibatis.apache.org/dtd/abator-config_1_0.dtd" >
+
+<abatorConfiguration >
+  <abatorContext >
+    <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://192.168.102.185:3306/platform?useUnicode\=true&amp;characterEncoding\=UTF-8&amp;createDatabaseIfNotExist\=true&amp;zeroDateTimeBehavior\=convertToNull&amp;autoReconnect\=true" userId="root" password="123456" >
+      <classPathEntry location="/Users/lyq/workspace/platform_api/WebContent/WEB-INF/lib/mysql-connector-java-5.0.8-bin.jar" />
+    </jdbcConnection>
+     <javaModelGenerator targetPackage="com.ck.platform.model.tmp" targetProject="platform_api" /> 
+    <sqlMapGenerator targetPackage="com.ck.platform.model.tmp" targetProject="platform_api" />
+    <!-- 
+    <table tableName="customer_unite" />
+    <table tableName="customer_info" />  
+    <table tableName="comm_data" /> 
+    <table tableName="comm_region" /> 
+    <table  tableName="order_info" />
+    <table  tableName="product_info" />
+    <table  tableName="order_product" /> 
+    <table  tableName="product_logo" /> 
+    <table  tableName="system_site_profile" /> 
+    <table  tableName="system_user" /> 
+    <table tableName="comm_data" /> 
+    <table tableName="comm_wechat_token" /> 
+    <table tableName="customer_unite_social" /> 
+    <table tableName="log_customer_browse" />
+    <table tableName="system_menu" />
+    <table tableName="system_role" />
+    <table tableName="system_role_menu" />
+    <table tableName="system_role_user" />
+    <table tableName="customer_vertification" />
+     <table tableName="customer_receive_address" />
+     <table tableName="log_order_payment" />
+     <table  tableName="order_info" />
+     <table tableName="cms_channel" />
+     <table  tableName="cms_column" />
+     <table  tableName="cms_tpl" />
+     -->
+     <table  tableName="order_inv" />
+     
+  </abatorContext>
+</abatorConfiguration>

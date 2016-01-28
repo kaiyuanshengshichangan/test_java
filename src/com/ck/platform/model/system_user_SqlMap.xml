@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="system_user">
+
+	<sql id="sql_where" >
+		<isNotEmpty property="username" prepend="and">
+               <![CDATA[ 
+                      username =#username#
+                ]]>
+		</isNotEmpty>
+		<isNotEmpty property="trueName" prepend="and">
+               <![CDATA[ 
+                      true_name like concat('%',#trueName#,'%')
+                ]]>
+		</isNotEmpty>
+   </sql>
+  
+  <select id="selectByKey" resultClass="java.util.HashMap" >
+    select id,username,nickname,true_name,mobile,age,sex,email,passwd,init_passwd,create_time,department_id,department,is_valid
+		from system_user
+		where id = #id#
+  </select>
+ 
+  <select id="selectByParam" resultClass="java.util.HashMap" >
+   select id,username,nickname,true_name,mobile,age,sex,email,passwd,init_passwd,create_time,department_id,department,is_valid
+		from system_user
+    where 1=1
+    <include refid="sql_where" /> limit 0,1;
+  </select>
+  
+  <delete id="deleteByKey" parameterClass="java.util.HashMap">
+    delete from system_user where
+    <isNotEmpty property="id">
+          id = #id# 
+ 	</isNotEmpty>
+  </delete>
+
+  <insert id="insert" parameterClass="java.util.HashMap">
+	    INSERT INTO system_user (id,
+	    <dynamic prepend=" ">  
+	        <isNotEmpty property="username" prepend=",">username</isNotEmpty>
+			<isNotEmpty property="nickname" prepend=",">nickname</isNotEmpty>
+			<isNotEmpty property="trueName" prepend=",">true_name</isNotEmpty>
+			<isNotEmpty property="age" prepend=",">age</isNotEmpty>
+	        <isNotEmpty property="sex" prepend=",">sex</isNotEmpty>
+			<isNotEmpty property="mobile" prepend=",">mobile</isNotEmpty>
+			<isNotEmpty property="email" prepend=",">email</isNotEmpty>
+			<isNotEmpty property="passwd" prepend=",">passwd</isNotEmpty>
+			<isNotEmpty property="initPasswd" prepend=",">init_passwd</isNotEmpty>
+			<isNotEmpty property="departmentId" prepend=",">department_id</isNotEmpty>
+			<isNotEmpty property="department" prepend=",">department</isNotEmpty>
+			<isNotEmpty property="isValid" prepend=",">is_valid</isNotEmpty>
+	    </dynamic>  
+	    <![CDATA[ 
+	        ) VALUES ( 
+	    ]]>  
+	    #id#,  
+	     <dynamic prepend=" ">  
+	        <isNotEmpty property="username" prepend=",">#username#
+			</isNotEmpty>
+			<isNotEmpty property="nickname" prepend=",">#nickname#
+			</isNotEmpty>
+			<isNotEmpty property="trueName" prepend=",">#trueName#
+			</isNotEmpty>
+			<isNotEmpty property="age" prepend=",">#age#</isNotEmpty>
+	        <isNotEmpty property="sex" prepend=",">#sex#</isNotEmpty>
+			<isNotEmpty property="mobile" prepend=",">#mobile#
+			</isNotEmpty>
+			<isNotEmpty property="passwd" prepend=",">#passwd#</isNotEmpty>
+			<isNotEmpty property="initPasswd" prepend=",">#initPasswd#</isNotEmpty>
+			<isNotEmpty property="departmentId" prepend=",">#departmentId#</isNotEmpty>
+			<isNotEmpty property="department" prepend=",">#department#</isNotEmpty>
+			<isNotEmpty property="isValid" prepend=",">#isValid#</isNotEmpty>
+	    </dynamic>  
+	    <![CDATA[ 
+	        ) 
+	    ]]>  
+    <selectKey  resultClass="long" keyProperty="id">
+        SELECT LAST_INSERT_ID() as id  from system_user  Limit 1;
+	</selectKey>
+  </insert>
+  
+  <update id="updateByKey" parameterClass="java.util.HashMap">
+   	update system_user
+  		<dynamic prepend="set" >
+		     <isNotEmpty prepend="," property="username">
+				username =#username#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="username">
+				username =#username#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="trueName">
+				true_name =#trueName#
+			</isNotEmpty>
+			 <isNotEmpty prepend="," property="age" >
+		       age = #age#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="sex" >
+		       sex = #sex#
+		     </isNotEmpty>
+			<isNotEmpty prepend="," property="mobile">
+				mobile =#mobile#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="email">
+				email =#email#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="passwd">
+				passwd =#passwd#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="initPasswd">
+				init_passwd =#initPasswd#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="departmentId">
+				department_id =#departmentId#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="department">
+				department =#department#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="isValid">
+				is_valid =#isValid#
+			</isNotEmpty>
+			
+		 </dynamic>
+		 where 
+		 <isNotEmpty  property="id" >
+		       id = #id#
+		 </isNotEmpty>
+  </update>
+  
+  <select id="getList" resultClass="java.util.HashMap" parameterClass="java.util.HashMap" >
+	 select id,username,nickname,true_name,mobile,age,sex,email,passwd,init_passwd,create_time,department_id,department,is_valid
+    from system_user
+	    WHERE 1=1
+	    <include refid="sql_where" />
+		limit #firstResult#, #maxResult# 
+  </select>
+  
+  <select id="getCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+	select  count(1) from system_user
+	where 1=1 
+    <include refid="sql_where" />
+  </select>
+</sqlMap>

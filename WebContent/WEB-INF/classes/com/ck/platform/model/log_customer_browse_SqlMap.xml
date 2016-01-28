@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="log_customer_browse_payment">
+
+	<sql id="sql_where" >
+ 		<isNotEmpty property="customerId">
+               <![CDATA[ 
+                      and customer_id = #customerId#
+                ]]>
+ 		</isNotEmpty>
+   </sql>
+  
+  <select id="selectByKey" resultClass="java.util.HashMap" >
+    select id,customer_id,browse_type,browse_url,site_id,open_time,op_ip,op_address,op_desc,is_valid
+    from log_customer_browse
+    where id = #id#
+  </select>
+ 
+  <select id="selectByParam" resultClass="java.util.HashMap" >
+    select id,customer_id,browse_type,browse_url,site_id,open_time,op_ip,op_address,op_desc,is_valid
+    from log_customer_browse
+    where 1=1
+    <include refid="sql_where" /> limit 0,1;
+  </select>
+  
+  <delete id="deleteByKey" parameterClass="java.util.HashMap">
+    delete from log_customer_browse where
+    <isNotEmpty property="id">
+                      id = #id#
+ 	</isNotEmpty>
+ 	<isNotEmpty property="ids">
+                      id in ($ids$)
+ 	</isNotEmpty>
+  </delete>
+
+  <insert id="insert" parameterClass="java.util.HashMap">
+	    INSERT INTO log_customer_browse (id,
+	    <dynamic prepend=" ">  
+	                <isNotEmpty property="customerId" prepend=",">customer_id</isNotEmpty>  
+	                <isNotEmpty property="browseType" prepend=",">browse_type</isNotEmpty> 
+	                <isNotEmpty property="browseUrl" prepend=",">browse_url</isNotEmpty>
+	                <isNotEmpty property="siteId" prepend=",">site_id</isNotEmpty>
+	                <isNotEmpty property="opIp" prepend=",">op_ip</isNotEmpty>
+	                <isNotEmpty property="opAddress" prepend=",">op_address</isNotEmpty>
+	                <isNotEmpty property="opDesc" prepend=",">op_desc</isNotEmpty>
+	    </dynamic>  
+	    <![CDATA[ 
+	        ) VALUES ( 
+	    ]]>  
+	    #id#,  
+	     <dynamic prepend=" ">  
+	                <isNotEmpty property="customerId" prepend=",">#customerId#</isNotEmpty>  
+	                <isNotEmpty property="browseType" prepend=",">#browseType#</isNotEmpty> 
+	                <isNotEmpty property="browseUrl" prepend=",">#browseUrl#</isNotEmpty>
+	                <isNotEmpty property="siteId" prepend=",">#siteId#</isNotEmpty>
+	                <isNotEmpty property="opIp" prepend=",">#opIp#</isNotEmpty>
+	                <isNotEmpty property="opAddress" prepend=",">#opAddress#</isNotEmpty>
+	                <isNotEmpty property="opDesc" prepend=",">#opDesc#</isNotEmpty> 
+	    </dynamic>  
+	    <![CDATA[ 
+	        ) 
+	    ]]>  
+    <selectKey  resultClass="long" keyProperty="id">
+        SELECT LAST_INSERT_ID() as id  from log_customer_browse  Limit 1;
+	</selectKey>
+  </insert>
+  
+  <update id="updateByKey" parameterClass="java.util.HashMap">
+   	update log_customer_browse
+  		<dynamic prepend="set" >
+		     <isNotEmpty prepend="," property="opDesc" >
+		       op_desc = #opDesc#
+		     </isNotEmpty>
+		     <isNotEmpty prepend="," property="isValid" >
+		       is_valid = #isValid#
+		     </isNotEmpty>
+		 </dynamic>
+		 where 
+		 <isNotEmpty  property="id" >
+		       id = #id:INTEGER#
+		 </isNotEmpty>
+  </update>
+  
+  <select id="getList" resultClass="java.util.HashMap" parameterClass="java.util.HashMap" >
+	  select id,customer_id,browse_type,browse_url,site_id,open_time,op_ip,op_address,op_desc,is_valid
+	     from log_customer_browse
+	    WHERE 1=1
+	    <include refid="sql_where" />
+		limit #firstResult#, #maxResult# 
+  </select>
+  
+  <select id="getCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+	select  count(1) from log_customer_browse
+	where 1=1 
+    <include refid="sql_where" />
+  </select>
+</sqlMap>

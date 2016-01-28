@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="cms_channel">
+
+	<sql id="sql_where" >
+		<isNotEmpty property="siteId">
+               <![CDATA[ 
+                      and site_id =#siteId#
+                ]]>
+ 		</isNotEmpty>
+ 		<isNotEmpty property="isValid">
+               <![CDATA[ 
+                      and is_Valid =#isValid#
+                ]]>
+ 		</isNotEmpty>
+		<isNotEmpty  property="channelName">
+		<![CDATA[  and channel_name like  #channelName# ]]>
+		</isNotEmpty>	
+		
+   </sql>
+  
+  <select id="selectByKey" resultClass="java.util.HashMap" >
+    select id,channel_name,channel_desc,channel_url
+    ,seo_meta_description,seo_meta_keyword,seo_title,sort_order,tpl_id,page_storage_path,site_id,is_valid
+    from cms_channel
+		where id = #id#
+  </select>
+ 
+  <select id="selectByParam" resultClass="java.util.HashMap" >
+    select id,channel_name,channel_desc,channel_url
+    ,seo_meta_description,seo_meta_keyword,seo_title,sort_order,tpl_id,page_storage_path,site_id,is_valid
+    from cms_channel
+    where 1=1
+    <include refid="sql_where" /> limit 0,1;
+  </select>
+  
+  <delete id="deleteByKey" parameterClass="java.util.HashMap">
+    delete from cms_channel where
+    <isNotEmpty property="id">
+          id = #id# 
+ 	</isNotEmpty>
+  </delete>
+
+  <insert id="insert" parameterClass="java.util.HashMap">
+	    INSERT INTO cms_channel (id,
+	    <dynamic prepend=" ">  
+	        	<isNotEmpty property="channelName" prepend=",">channel_name</isNotEmpty>  
+                <isNotEmpty property="sortOrder" prepend=",">sort_order</isNotEmpty>  
+                <isNotEmpty property="isValid" prepend=",">is_valid</isNotEmpty>  
+                <isNotEmpty property="channelDesc" prepend=",">channel_desc</isNotEmpty>  
+                <isNotEmpty property="channelUrl" prepend=",">channel_url</isNotEmpty>  
+                <isNotEmpty property="seoMetaDescription" prepend=",">seo_meta_description</isNotEmpty>  
+                <isNotEmpty property="seoMetaKeyword" prepend=",">seo_meta_keyword</isNotEmpty>  
+                <isNotEmpty property="seoTitle" prepend=",">seo_title</isNotEmpty>  
+                <isNotEmpty property="tplId" prepend=",">tpl_id</isNotEmpty>  
+                <isNotEmpty property="pageStoragePath" prepend=",">page_storage_path</isNotEmpty>  
+                <isNotEmpty property="siteId" prepend=",">site_id</isNotEmpty>
+	    </dynamic>  
+	    <![CDATA[ 
+	        ) VALUES ( 
+	    ]]>  
+	    #id#,  
+	     <dynamic prepend=" ">  
+	        <isNotEmpty property="channelName" prepend=",">#channelName#</isNotEmpty>  
+                <isNotEmpty property="sortOrder" prepend=",">#sortOrder#</isNotEmpty>  
+                <isNotEmpty property="isValid" prepend=",">#isValid#</isNotEmpty>  
+                <isNotEmpty property="channelDesc" prepend=",">#channelDesc#</isNotEmpty>  
+                <isNotEmpty property="channelUrl" prepend=",">#channelUrl#</isNotEmpty>  
+                <isNotEmpty property="seoMetaDescription" prepend=",">#seoMetaDescription#</isNotEmpty>  
+                <isNotEmpty property="seoMetaKeyword" prepend=",">#seoMetaKeyword#</isNotEmpty>  
+                <isNotEmpty property="seoTitle" prepend=",">#seoTitle#</isNotEmpty>  
+                <isNotEmpty property="tplId" prepend=",">#tplId#</isNotEmpty>  
+                <isNotEmpty property="pageStoragePath" prepend=",">#pageStoragePath#</isNotEmpty>
+                <isNotEmpty property="siteId" prepend=",">#siteId#</isNotEmpty>
+	    </dynamic>  
+	    <![CDATA[ 
+	        ) 
+	    ]]>  
+    <selectKey  resultClass="long" keyProperty="id">
+        SELECT LAST_INSERT_ID() as id  from cms_channel  Limit 1;
+	</selectKey>
+  </insert>
+  
+  <update id="updateByKey" parameterClass="java.util.HashMap">
+   	update cms_channel
+  		<dynamic prepend="set" >
+		     <isNotEmpty prepend="," property="channelName">
+        		channel_name = #channelName:VARCHAR#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="sortOrder">
+        		sort_order = #sortOrder:BIGINT#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="isValid">
+        		is_valid = #isValid:INTEGER#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="channelDesc">
+        		channel_desc = #channelDesc:VARCHAR#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="channelUrl">
+        		channel_url = #channelUrl:VARCHAR#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="seoMetaDescription">
+       		   seo_meta_description = #seoMetaDescription:VARCHAR#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="seoMetaKeyword">
+        		seo_meta_keyword = #seoMetaKeyword:VARCHAR#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="seoTitle">
+        		seo_title = #seoTitle:VARCHAR#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="tplId">
+        		tpl_id = #tplId:VARCHAR#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="pageStoragePath">
+        		page_storage_path = #pagStoragePath:VARCHAR#
+			</isNotEmpty>
+			<isNotEmpty prepend="," property="siteId">
+        		site_id = #siteId:INTEGER#
+			</isNotEmpty>
+		 </dynamic>
+		 where 
+		 <isNotEmpty  property="id" >
+		       id = #id#
+		 </isNotEmpty>
+  </update>
+  
+  <select id="getList" resultClass="java.util.HashMap" parameterClass="java.util.HashMap" >
+	 select id,channel_name,channel_desc,channel_url
+    ,seo_meta_description,seo_meta_keyword,seo_title,sort_order,tpl_id,page_storage_path,site_id,is_valid
+    from cms_channel
+	    WHERE 1=1
+	    <include refid="sql_where" />
+		limit #firstResult#, #maxResult# 
+  </select>
+  
+  <select id="getCount" parameterClass="java.util.HashMap" resultClass="java.lang.Integer">
+	select  count(1) from cms_channel
+	where 1=1 
+    <include refid="sql_where" />
+  </select>
+</sqlMap>
