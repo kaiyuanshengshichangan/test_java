@@ -15,5 +15,5 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
 		TransactionalTestExecutionListener.class })
 @org.springframework.test.context.transaction.TransactionConfiguration(defaultRollback = true)
 public class BaseInterfaceTest {
-	
+	   
 }
